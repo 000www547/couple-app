@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "openapi": ["路人无"]
+  },
+  "desc": "登录云函数",
+  "supportsAsync": true
+}
