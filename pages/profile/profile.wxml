@@ -12,6 +12,20 @@
     <van-button size="small" round type="primary" plain bindtap="showEditModal">编辑资料</van-button>
   </view>
 
+  <!-- 邀请码展示 -->
+  <view class="invite-section" wx:if="{{userInfo && userInfo.inviteCode}}">
+    <view class="invite-card">
+      <view class="invite-header">
+        <text class="invite-title">我的邀请码</text>
+        <text class="invite-desc">分享给 TA 绑定关系</text>
+      </view>
+      <view class="invite-code-box">
+        <text class="invite-code">{{userInfo.inviteCode}}</text>
+      </view>
+      <van-button type="primary" size="small" round bindtap="copyInviteCode">复制邀请码</van-button>
+    </view>
+  </view>
+
   <!-- 伴侣信息 -->
   <view class="partner-section" wx:if="{{partnerInfo}}">
     <view class="section-title">我的另一半</view>

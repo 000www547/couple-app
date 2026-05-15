@@ -313,5 +313,33 @@ Page({
 
   generateInviteCode: function() {
     return 'COUPLE' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 4).toUpperCase();
+  },
+
+  // 复制邀请码
+  copyInviteCode: function() {
+    const userInfo = this.data.userInfo;
+    if (!userInfo || !userInfo.inviteCode) {
+      wx.showToast({
+        title: '邀请码不存在',
+        icon: 'none'
+      });
+      return;
+    }
+
+    wx.setClipboardData({
+      data: userInfo.inviteCode,
+      success: () => {
+        wx.showToast({
+          title: '邀请码已复制',
+          icon: 'success'
+        });
+      },
+      fail: () => {
+        wx.showToast({
+          title: '复制失败',
+          icon: 'none'
+        });
+      }
+    });
   }
 });
