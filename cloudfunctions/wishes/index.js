@@ -35,64 +35,85 @@ exports.main = async (event, context) => {
         };
 
       case 'getList':
-        // 获取心愿列表
+        // 获取心愿列表 - 根据关系系统查询
+        let userIds = [openid];
+        let partnerIds = [];
+
+        // 获取用户信息，查找关系
+        const user = await db.collection('users').where({
+          _openid: openid
+        }).get();
+
+        if (user.data && user.data.length > 0) {
+          const userData = user.data[0];
+
+          // 从 relationships 中获取所有关系
+          if (userData.relationships && userData.relationships.length > 0) {
+            const activeRelations = userData.relationships.filter(r => r.status === 'active');
+            partnerIds = activeRelations.map(r => r.partnerId);
+            userIds = [...userIds, ...partnerIds];
+          }
+
+          // 也添加 activeRelationship（兼容旧数据）
+          if (userData.activeRelationship && !partnerIds.includes(userData.activeRelationship)) {
+            partnerIds.push(userData.activeRelationship);
+            userIds.push(userData.activeRelationship);
+          }
+        }
+
         if (event.type === 'my') {
-          // 我的心愿
+          // 我的心愿 - 仅自己的
           const myResult = await db.collection('wishes').where({
             userId: openid
           }).orderBy('createTime', 'desc').get();
-          
+
           return {
             success: true,
             wishes: myResult.data
           };
         } else if (event.type === 'shared') {
-          // 共同心愿（需要先获取伴侣ID）
-          const user = await db.collection('users').where({
-            _openid: openid
-          }).get();
-          
-          if (user.data && user.data[0] && user.data[0].partnerId) {
-            // 获取双方的心愿
-            const partnerId = user.data[0].partnerId;
-            const listResult = await db.collection('wishes').where(
-              _.or([
-                { userId: openid, isShared: true },
-                { userId: partnerId, isShared: true }
-              ])
-            ).orderBy('createTime', 'desc').get();
-            
+          // 共同心愿 - 自己设为共同的 + 伴侣设为共同的
+          if (partnerIds.length === 0) {
+            // 没有关系，返回自己的共同心愿
+            const myShared = await db.collection('wishes').where({
+              userId: openid,
+              isShared: true
+            }).orderBy('createTime', 'desc').get();
+
             return {
               success: true,
-              wishes: listResult.data
+              wishes: myShared.data
             };
           }
-          
+
+          const listResult = await db.collection('wishes').where(
+            _.or([
+              { userId: openid, isShared: true },
+              ...partnerIds.map(pid => ({ userId: pid, isShared: true }))
+            ])
+          ).orderBy('createTime', 'desc').get();
+
           return {
             success: true,
-            wishes: []
+            wishes: listResult.data
           };
         } else {
-          // 所有（我的 + 共同的）
-          const user = await db.collection('users').where({
-            _openid: openid
-          }).get();
-          
-          let listResult;
-          if (user.data && user.data[0] && user.data[0].partnerId) {
-            const partnerId = user.data[0].partnerId;
-            listResult = await db.collection('wishes').where(
-              _.or([
-                { userId: openid },
-                { userId: partnerId }
-              ])
-            ).orderBy('createTime', 'desc').get();
-          } else {
-            listResult = await db.collection('wishes').where({
+          // 所有 - 自己和伴侣的所有心愿
+          if (userIds.length === 1) {
+            const myResult = await db.collection('wishes').where({
               userId: openid
             }).orderBy('createTime', 'desc').get();
+
+            return {
+              success: true,
+              wishes: myResult.data
+            };
           }
-          
+
+          const listResult = await db.collection('wishes').where({
+            userId: _.in(userIds)
+          }).orderBy('createTime', 'desc').get();
+
           return {
             success: true,
             wishes: listResult.data

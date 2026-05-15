@@ -33,18 +33,44 @@ exports.main = async (event, context) => {
         };
 
       case 'getList':
-        // 获取动态列表
+        // 获取动态列表 - 仅显示自己和伴侣的动态
+        let userIds = [openid];
+
+        // 获取用户信息，查找伴侣ID
+        const currentUser = await db.collection('users').where({
+          _openid: openid
+        }).get();
+
+        if (currentUser.data && currentUser.data.length > 0) {
+          const user = currentUser.data[0];
+
+          // 从 relationships 中获取所有关系
+          if (user.relationships && user.relationships.length > 0) {
+            const activeRelations = user.relationships.filter(r => r.status === 'active');
+            userIds = [...userIds, ...activeRelations.map(r => r.partnerId)];
+          }
+
+          // 也添加 activeRelationship（兼容旧数据）
+          if (user.activeRelationship && !userIds.includes(user.activeRelationship)) {
+            userIds.push(user.activeRelationship);
+          }
+        }
+
+        // 查询动态列表
         const listResult = await db.collection('moments')
+          .where({
+            userId: _.in(userIds)
+          })
           .orderBy('createTime', 'desc')
           .limit(50)
           .get();
 
         // 获取用户信息
-        const userIds = [...new Set(listResult.data.map(m => m.userId))];
+        const uniqueUserIds = [...new Set(listResult.data.map(m => m.userId))];
         const userInfos = {};
 
-        if (userIds.length > 0) {
-          for (const userId of userIds) {
+        if (uniqueUserIds.length > 0) {
+          for (const userId of uniqueUserIds) {
             const user = await db.collection('users').where({
               _openid: userId
             }).get();

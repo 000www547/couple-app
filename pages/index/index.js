@@ -85,9 +85,24 @@ Page({
       return;
     }
 
-    db.collection('anniversaries').where({
-      userId: this.data.userInfo._openid
-    }).orderBy('date', 'asc').get({
+    const currentOpenid = this.data.userInfo._openid;
+
+    // 查询当前用户和伴侣的纪念日
+    let query = db.collection('anniversaries').where({
+      userId: currentOpenid
+    });
+
+    // 如果有激活关系，也加载伴侣的纪念日
+    if (this.data.userInfo.activeRelationship) {
+      query = db.collection('anniversaries').where(
+        db.command.or(
+          { userId: currentOpenid },
+          { userId: this.data.userInfo.activeRelationship }
+        )
+      );
+    }
+
+    query.orderBy('date', 'asc').get({
       success: function(res) {
         const anniversaries = res.data.map(item => {
           const date = new Date(item.date);
@@ -99,6 +114,9 @@ Page({
           } else if (item.type === 'birthday') {
             that.calculateBirthdayCountdown(item.date);
           }
+
+          // 标记是否为伴侣的纪念日
+          item.isPartner = item.userId !== currentOpenid;
 
           return {
             ...item,
