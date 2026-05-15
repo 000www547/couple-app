@@ -12,7 +12,9 @@ Page({
       description: '',
       isShared: false
     },
-    loading: false
+    loading: false,
+    progressPercent: 0,
+    completedCount: 0
   },
 
   onShow: function() {
@@ -45,7 +47,10 @@ Page({
     }).then(res => {
       this.setData({ loading: false });
       if (res.result.success) {
-        this.setData({ wishes: res.result.wishes });
+        const wishes = res.result.wishes;
+        const completedCount = wishes.filter(w => w.isCompleted).length;
+        const percent = wishes.length > 0 ? Math.round((completedCount / wishes.length) * 100) : 0;
+        this.setData({ wishes, progressPercent: percent, completedCount });
       }
     }).catch(err => {
       this.setData({ loading: false });

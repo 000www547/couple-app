@@ -47,7 +47,7 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.0.0",
+  "libVersion": "3.16.0",
   "appid": "wxe0cd39e9be5f1327",
   "projectname": "couple-app",
   "condition": {},
@@ -56,5 +56,7 @@
     "tabSize": 2
   },
   "cloudfunctionRoot": "cloudfunctions/",
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
+  "cloudfunctionEnv": "cloud1",
   "simulatorPluginLibVersion": {}
 }

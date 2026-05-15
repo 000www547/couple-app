@@ -4,9 +4,9 @@
   <view class="progress-section">
     <view class="progress-header">
       <text class="progress-label">完成进度</text>
-      <text class="progress-value">{{wishes.length > 0 ? (wishes.filter(function(w){return w.isCompleted}).length) : 0}}/{{wishes.length}}</text>
+      <text class="progress-value">{{completedCount || 0}}/{{wishes.length}}</text>
     </view>
-    <van-progress percentage="{{wishes.length > 0 ? Math.round((wishes.filter(function(w){return w.isCompleted}).length / wishes.length) * 100) : 0}}" color="#FFB6C1" track-color="#f0f0f0" stroke-width="8rpx" rounded />
+    <van-progress percentage="{{progressPercent}}" color="#FFB6C1" track-color="#f0f0f0" stroke-width="8rpx" rounded />
   </view>
 
   <!-- Tab切换 -->

@@ -36,11 +36,16 @@ exports.main = async (event, context) => {
 
       case 'getList':
         // 获取心愿列表
-        let query = {};
-        
         if (event.type === 'my') {
           // 我的心愿
-          query = { userId: openid };
+          const myResult = await db.collection('wishes').where({
+            userId: openid
+          }).orderBy('createTime', 'desc').get();
+          
+          return {
+            success: true,
+            wishes: myResult.data
+          };
         } else if (event.type === 'shared') {
           // 共同心愿（需要先获取伴侣ID）
           const user = await db.collection('users').where({
@@ -93,15 +98,6 @@ exports.main = async (event, context) => {
             wishes: listResult.data
           };
         }
-
-        const result = await db.collection('wishes').where(query)
-          .orderBy('createTime', 'desc')
-          .get();
-        
-        return {
-          success: true,
-          wishes: result.data
-        };
 
       case 'complete':
         // 完成心愿

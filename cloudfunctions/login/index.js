@@ -4,6 +4,10 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 
 const db = cloud.database();
 
+function generateInviteCode() {
+  return 'COUPLE' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 4).toUpperCase();
+}
+
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
@@ -29,6 +33,7 @@ exports.main = async (event, context) => {
         avatar: event.avatar || '',
         role: '', // boyfriend 或 girlfriend
         partnerId: '',
+        inviteCode: generateInviteCode(),
         createTime: db.serverDate(),
         anniversaryDate: event.anniversaryDate || null // 在一起的日期
       };
