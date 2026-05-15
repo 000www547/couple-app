@@ -1,0 +1,16 @@
+{
+  "name": "couple-app",
+  "version": "1.0.0",
+  "description": "情侣日常分享小程序",
+  "main": "app.js",
+  "scripts": {
+    "dev": "echo \"请使用微信开发者工具打开项目\"",
+    "build": "echo \"请使用微信开发者工具构建 npm\""
+  },
+  "keywords": ["wechat", "miniprogram", "couple"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vant/weapp": "^1.10.0"
+  }
+}

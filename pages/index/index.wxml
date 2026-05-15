@@ -75,6 +75,10 @@
         </view>
       </view>
 
+      <view class="input-group" wx:if="{{newAnniversary.type === 'custom'}}">
+        <input class="input" placeholder="自定义纪念日名称" value="{{newAnniversary.customTitle}}" bindinput="onCustomTitleInput"/>
+      </view>
+
       <van-button type="primary" block round bindtap="saveAnniversary">保存</van-button>
     </view>
   </van-popup>

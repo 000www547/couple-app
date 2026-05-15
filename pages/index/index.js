@@ -12,7 +12,8 @@ Page({
     newAnniversary: {
       title: '',
       date: '',
-      type: 'custom'
+      type: 'custom',
+      customTitle: ''
     }
   },
 
@@ -22,24 +23,36 @@ Page({
 
   login: function() {
     wx.showLoading({ title: '加载中...' });
-    
+
     wx.cloud.callFunction({
       name: 'login',
       data: {}
     }).then(res => {
       wx.hideLoading();
-      if (res.result.success) {
-        this.setData({ userInfo: res.result.user });
+      if (res.result && res.result.success) {
+        const user = res.result.user;
+        this.setData({ userInfo: user });
+        app.globalData.userInfo = user;
+        app.globalData.isLoggedIn = true;
         this.loadAnniversaries();
-        
+
         // 计算在一起天数
-        if (res.result.user.anniversaryDate) {
-          this.calculateDaysTogether(res.result.user.anniversaryDate);
+        if (user && user.anniversaryDate) {
+          this.calculateDaysTogether(user.anniversaryDate);
         }
+      } else {
+        wx.showToast({
+          title: '登录失败，请重试',
+          icon: 'none'
+        });
       }
     }).catch(err => {
       wx.hideLoading();
       console.error('登录失败', err);
+      wx.showToast({
+        title: '网络错误，请检查连接',
+        icon: 'none'
+      });
     });
   },
 
@@ -66,7 +79,12 @@ Page({
   loadAnniversaries: function() {
     const that = this;
     const db = wx.cloud.database();
-    
+
+    if (!this.data.userInfo || !this.data.userInfo._openid) {
+      console.log('用户未登录，跳过加载纪念日');
+      return;
+    }
+
     db.collection('anniversaries').where({
       userId: this.data.userInfo._openid
     }).orderBy('date', 'asc').get({
@@ -75,21 +93,24 @@ Page({
           const date = new Date(item.date);
           const now = new Date();
           const days = Math.floor((date - now) / (1000 * 60 * 60 * 24));
-          
+
           if (item.type === 'start') {
             that.calculateDaysTogether(item.date);
           } else if (item.type === 'birthday') {
             that.calculateBirthdayCountdown(item.date);
           }
-          
+
           return {
             ...item,
             countdown: days >= 0 ? days : 0,
             isPast: days < 0
           };
         });
-        
+
         that.setData({ anniversaries });
+      },
+      fail: function(err) {
+        console.error('加载纪念日失败', err);
       }
     });
   },
@@ -99,9 +120,15 @@ Page({
   },
 
   hideAddModal: function() {
-    this.setData({ 
+    this.setData({
       showAddModal: false,
-      newAnniversary: { title: '', date: '', type: 'custom' }
+      newAnniversary: { title: '', date: '', type: 'custom', customTitle: '' }
+    });
+  },
+
+  onCustomTitleInput: function(e) {
+    this.setData({
+      'newAnniversary.customTitle': e.detail.value
     });
   },
 
@@ -118,8 +145,25 @@ Page({
   },
 
   onTypeChange: function(e) {
+    const type = e.currentTarget.dataset.type;
+    let title = '';
+
+    // 根据类型设置默认标题
+    switch (type) {
+      case 'start':
+        title = '在一起';
+        break;
+      case 'birthday':
+        title = '生日';
+        break;
+      case 'custom':
+        title = this.data.newAnniversary.customTitle || '';
+        break;
+    }
+
     this.setData({
-      'newAnniversary.type': e.currentTarget.dataset.type
+      'newAnniversary.type': type,
+      'newAnniversary.title': title
     });
   },
 
