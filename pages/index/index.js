@@ -169,20 +169,38 @@ Page({
 
   saveAnniversary: function() {
     const { newAnniversary } = this.data;
-    
-    if (!newAnniversary.title || !newAnniversary.date) {
+
+    if (!this.data.userInfo || !this.data.userInfo._openid) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
+
+    if (!newAnniversary.date) {
       wx.showToast({
-        title: '请填写完整信息',
+        title: '请选择日期',
         icon: 'none'
       });
       return;
+    }
+
+    // 根据类型确定最终标题
+    let finalTitle = newAnniversary.title;
+    if (newAnniversary.type === 'custom') {
+      finalTitle = newAnniversary.customTitle || '自定义纪念日';
+      if (!newAnniversary.customTitle) {
+        wx.showToast({
+          title: '请输入自定义标题',
+          icon: 'none'
+        });
+        return;
+      }
     }
 
     const db = wx.cloud.database();
     db.collection('anniversaries').add({
       data: {
         userId: this.data.userInfo._openid,
-        title: newAnniversary.title,
+        title: finalTitle,
         date: newAnniversary.date,
         type: newAnniversary.type,
         createTime: db.serverDate()
@@ -191,6 +209,10 @@ Page({
         wx.showToast({ title: '添加成功' });
         this.hideAddModal();
         this.loadAnniversaries();
+      },
+      fail: (err) => {
+        console.error('添加纪念日失败', err);
+        wx.showToast({ title: '添加失败', icon: 'none' });
       }
     });
   },

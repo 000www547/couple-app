@@ -51,7 +51,7 @@
     <view class="add-modal">
       <view class="modal-title">添加纪念日</view>
       
-      <view class="input-group">
+      <view class="input-group" wx:if="{{newAnniversary.type !== 'custom'}}">
         <input class="input" placeholder="输入纪念日名称" value="{{newAnniversary.title}}" bindinput="onTitleInput"/>
       </view>
       
