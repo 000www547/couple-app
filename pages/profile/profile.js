@@ -5,6 +5,7 @@ Page({
   data: {
     userInfo: null,
     partnerInfo: null,
+    relationships: [],
     stats: {
       moments: 0,
       wishes: 0,
@@ -12,12 +13,14 @@ Page({
     },
     showEditModal: false,
     showBindModal: false,
+    showUnbindModal: false,
     editForm: {
       nickname: '',
       anniversaryDate: '',
       birthday: ''
     },
-    partnerCode: ''
+    partnerCode: '',
+    selectedRelationType: 'couple'
   },
 
   onShow: function() {
@@ -41,10 +44,13 @@ Page({
           that.loadStats();
         }
 
-        // 如果有伴侣，获取伴侣信息
-        if (user && user.partnerId) {
-          that.getPartnerInfo(user.partnerId);
+        // 如果有激活的关系，获取关系信息
+        if (user && user.activeRelationship) {
+          that.getPartnerInfo(user.activeRelationship);
         }
+
+        // 加载关系列表
+        that.loadRelationships();
       } else {
         console.error('获取用户信息失败', res.result);
       }
@@ -105,6 +111,38 @@ Page({
       if (res.data.length > 0) {
         this.setData({ partnerInfo: res.data[0] });
       }
+    });
+  },
+
+  // 加载关系列表
+  loadRelationships: function() {
+    wx.cloud.callFunction({
+      name: 'relationships',
+      data: { action: 'getList' }
+    }).then(res => {
+      if (res.result && res.result.success) {
+        this.setData({
+          relationships: res.result.relationships || [],
+          activeRelationship: res.result.activeRelationship
+        });
+      }
+    }).catch(err => {
+      console.error('加载关系列表失败', err);
+    });
+  },
+
+  // 选择关系类型
+  onRelationTypeChange: function(e) {
+    const types = ['couple', 'bestie', 'family', 'custom'];
+    this.setData({
+      selectedRelationType: types[e.detail.value]
+    });
+  },
+
+  // 设置关系类型
+  setRelationType: function(e) {
+    this.setData({
+      selectedRelationType: e.currentTarget.dataset.type
     });
   },
 
@@ -221,7 +259,11 @@ Page({
   },
 
   showBindModal: function() {
-    this.setData({ showBindModal: true, partnerCode: '' });
+    this.setData({
+      showBindModal: true,
+      partnerCode: '',
+      selectedRelationType: 'couple'
+    });
   },
 
   hideBindModal: function() {
@@ -251,59 +293,33 @@ Page({
       return;
     }
 
-    const db = wx.cloud.database();
     const that = this;
 
     wx.showLoading({ title: '绑定中...' });
 
-    // 通过邀请码查找用户
-    db.collection('users').where({
-      inviteCode: code
-    }).get().then(res => {
-      if (res.data.length === 0) {
-        wx.hideLoading();
-        wx.showToast({
-          title: '邀请码无效',
-          icon: 'none'
-        });
-        return;
+    // 使用新的关系管理云函数
+    wx.cloud.callFunction({
+      name: 'relationships',
+      data: {
+        action: 'bind',
+        partnerCode: code,
+        relationType: that.data.selectedRelationType
       }
-
-      const partner = res.data[0];
-      if (partner._openid === userInfo._openid) {
-        wx.hideLoading();
-        wx.showToast({
-          title: '不能绑定自己',
-          icon: 'none'
-        });
-        return;
-      }
-
-      // 互相绑定
-      const batch = db.batch();
-      batch.update(db.collection('users').doc(userInfo._id), {
-        data: { partnerId: partner._openid, role: 'boyfriend' }
-      });
-      batch.update(db.collection('users').doc(partner._id), {
-        data: { partnerId: userInfo._openid, role: 'girlfriend' }
-      });
-
-      batch.commit().then(() => {
-        wx.hideLoading();
+    }).then(res => {
+      wx.hideLoading();
+      if (res.result && res.result.success) {
         wx.showToast({ title: '绑定成功' });
         that.hideBindModal();
         that.getUserInfo();
-      }).catch(err => {
-        wx.hideLoading();
-        console.error('绑定失败', err);
+      } else {
         wx.showToast({
-          title: '绑定失败',
+          title: res.result.error || '绑定失败',
           icon: 'none'
         });
-      });
+      }
     }).catch(err => {
       wx.hideLoading();
-      console.error('查找邀请码失败', err);
+      console.error('绑定失败', err);
       wx.showToast({
         title: '网络错误',
         icon: 'none'
@@ -339,6 +355,98 @@ Page({
           title: '复制失败',
           icon: 'none'
         });
+      }
+    });
+  },
+
+  // 显示解除关系弹窗
+  showUnbindModal: function() {
+    this.setData({ showUnbindModal: true });
+  },
+
+  hideUnbindModal: function() {
+    this.setData({ showUnbindModal: false });
+  },
+
+  // 发起解除关系
+  requestUnbind: function() {
+    const partnerInfo = this.data.partnerInfo;
+    if (!partnerInfo) {
+      wx.showToast({ title: '暂无绑定关系', icon: 'none' });
+      return;
+    }
+
+    wx.showModal({
+      title: '确认解除',
+      content: '确定要发起解除关系吗？对方确认后将解除绑定。',
+      success: (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '处理中...' });
+          wx.cloud.callFunction({
+            name: 'relationships',
+            data: {
+              action: 'requestUnbind',
+              partnerId: partnerInfo._openid
+            }
+          }).then(res => {
+            wx.hideLoading();
+            if (res.result && res.result.success) {
+              wx.showToast({ title: '已发起解除请求' });
+              this.hideUnbindModal();
+              this.loadRelationships();
+            } else {
+              wx.showToast({
+                title: res.result.error || '操作失败',
+                icon: 'none'
+              });
+            }
+          }).catch(err => {
+            wx.hideLoading();
+            console.error('解除关系失败', err);
+            wx.showToast({ title: '操作失败', icon: 'none' });
+          });
+        }
+      }
+    });
+  },
+
+  // 确认解除关系
+  confirmUnbind: function(e) {
+    const partnerId = e.currentTarget.dataset.partnerid;
+    wx.showModal({
+      title: '确认解除',
+      content: '确定要解除该关系吗？解除后共同数据将被清除。',
+      success: (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '处理中...' });
+          wx.cloud.callFunction({
+            name: 'relationships',
+            data: {
+              action: 'confirmUnbind',
+              partnerId: partnerId
+            }
+          }).then(res => {
+            wx.hideLoading();
+            if (res.result && res.result.success) {
+              wx.showToast({ title: '已解除关系' });
+              this.setData({
+                partnerInfo: null,
+                partnerId: ''
+              });
+              this.loadRelationships();
+              this.getUserInfo();
+            } else {
+              wx.showToast({
+                title: res.result.error || '操作失败',
+                icon: 'none'
+              });
+            }
+          }).catch(err => {
+            wx.hideLoading();
+            console.error('解除关系失败', err);
+            wx.showToast({ title: '操作失败', icon: 'none' });
+          });
+        }
       }
     });
   }

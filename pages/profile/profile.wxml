@@ -28,7 +28,10 @@
 
   <!-- 伴侣信息 -->
   <view class="partner-section" wx:if="{{partnerInfo}}">
-    <view class="section-title">我的另一半</view>
+    <view class="section-header-row">
+      <view class="section-title">我的另一半</view>
+      <text class="unbind-btn" bindtap="showUnbindModal">解除关系</text>
+    </view>
     <view class="partner-card">
       <image class="avatar" src="{{partnerInfo.avatar || '/assets/icons/user.png'}}"/>
       <view class="partner-info">
@@ -41,6 +44,28 @@
   <!-- 绑定伴侣 -->
   <view class="bind-section" wx:if="{{!partnerInfo}}">
     <van-button type="primary" block round bindtap="showBindModal">绑定另一半</van-button>
+  </view>
+
+  <!-- 关系列表 -->
+  <view class="relationship-section" wx:if="{{relationships.length > 0}}">
+    <view class="section-title">我的关系</view>
+    <view class="relationship-list">
+      <view class="relationship-item" wx:for="{{relationships}}" wx:key="partnerId">
+        <view class="relationship-left">
+          <image class="avatar-small" src="/assets/icons/user.png"/>
+          <view class="relationship-info">
+            <text class="relationship-name">{{item.partnerName || 'TA'}}</text>
+            <view class="relationship-tags">
+              <van-tag type="primary" size="small">{{item.typeName}}</van-tag>
+              <van-tag type="warning" size="small" wx:if="{{item.status === 'pending_unbind'}}">待确认</van-tag>
+            </view>
+          </view>
+        </view>
+        <view class="relationship-actions">
+          <van-button size="mini" type="danger" plain wx:if="{{item.status === 'pending_unbind' && item.unbindRequestBy !== userInfo._openid}}" bindtap="confirmUnbind" data-partnerid="{{item.partnerId}}">确认解除</van-button>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 统计数据 -->
@@ -97,14 +122,48 @@
   <!-- 绑定弹窗 -->
   <van-popup show="{{showBindModal}}" round position="bottom" bind:close="hideBindModal">
     <view class="bind-modal">
-      <view class="modal-title">绑定另一半</view>
+      <view class="modal-title">绑定关系</view>
       <view class="bind-desc">让 TA 在个人中心生成邀请码，然后在这里输入绑定</view>
-      
+
+      <!-- 关系类型选择 -->
+      <view class="relation-type-group">
+        <view class="relation-type-btn {{selectedRelationType === 'couple' ? 'active' : ''}}" bindtap="setRelationType" data-type="couple">
+          情侣
+        </view>
+        <view class="relation-type-btn {{selectedRelationType === 'bestie' ? 'active' : ''}}" bindtap="setRelationType" data-type="bestie">
+          闺蜜/兄弟
+        </view>
+        <view class="relation-type-btn {{selectedRelationType === 'family' ? 'active' : ''}}" bindtap="setRelationType" data-type="family">
+          家人
+        </view>
+        <view class="relation-type-btn {{selectedRelationType === 'custom' ? 'active' : ''}}" bindtap="setRelationType" data-type="custom">
+          自定义
+        </view>
+      </view>
+
       <view class="input-group">
         <input class="input" placeholder="输入对方邀请码" value="{{partnerCode}}" bindinput="onCodeInput"/>
       </view>
 
       <van-button type="primary" block round bindtap="bindPartner">绑定</van-button>
+    </view>
+  </van-popup>
+
+  <!-- 解除关系弹窗 -->
+  <van-popup show="{{showUnbindModal}}" round position="bottom" bind:close="hideUnbindModal">
+    <view class="unbind-modal">
+      <view class="modal-title">解除关系</view>
+      <view class="unbind-desc">
+        解除关系后：
+        <text class="unbind-highlight">1. 双方共同数据将被清除</text>
+        <text class="unbind-highlight">2. 甜蜜时刻、心愿清单将被删除</text>
+        <text class="unbind-highlight">3. 需要重新绑定才能再次使用</text>
+      </view>
+      <view class="unbind-warning">
+        <text>⚠️ 此操作不可逆，请谨慎操作</text>
+      </view>
+      <van-button type="danger" block round bindtap="requestUnbind">发起解除</van-button>
+      <van-button plain block round bindtap="hideUnbindModal" class="mt-20">取消</van-button>
     </view>
   </van-popup>
 </view>

@@ -198,3 +198,123 @@
   font-weight: bold;
   letter-spacing: 4rpx;
 }
+
+/* 关系列表 */
+.relationship-section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-top: 20rpx;
+}
+
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.unbind-btn {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.relationship-list {
+  margin-top: 10rpx;
+}
+
+.relationship-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.relationship-item:last-child {
+  border-bottom: none;
+}
+
+.relationship-left {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-small {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+}
+
+.relationship-info {
+  margin-left: 16rpx;
+}
+
+.relationship-name {
+  font-size: 28rpx;
+  color: #333;
+  display: block;
+}
+
+.relationship-tags {
+  margin-top: 8rpx;
+}
+
+/* 关系类型选择 */
+.relation-type-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+}
+
+.relation-type-btn {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  margin: 0 6rpx;
+  border: 1rpx solid #eee;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #666;
+  background: #fff;
+}
+
+.relation-type-btn.active {
+  background: #FFB6C1;
+  color: #fff;
+  border-color: #FFB6C1;
+}
+
+/* 解除关系弹窗 */
+.unbind-modal {
+  padding: 40rpx;
+}
+
+.unbind-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 30rpx;
+}
+
+.unbind-highlight {
+  display: block;
+  color: #ff4d4f;
+}
+
+.unbind-warning {
+  background: #fff2f0;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.unbind-warning text {
+  color: #ff4d4f;
+  font-size: 24rpx;
+}
+
+.mt-20 {
+  margin-top: 20rpx;
+}
