@@ -1,5 +1,29 @@
-node_modules/
-miniprogram_npm/
-.miniprogram/
-.DS_Store
+# 微信小程序编译产物
+/cloudfunction-templates/
+/node_modules/
+/package-lock.json
+/components/
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 微信开发者工具
+/.project.config.json.bak
+/.project.config.json.local
+
+# 日志
 *.log
+npm-debug.log*
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 云开发本地模拟
+.env.local
