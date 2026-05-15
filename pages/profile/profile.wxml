@@ -1,0 +1,96 @@
+<!--pages/profile/profile.wxml-->
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="avatar-section">
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar-large" src="{{userInfo.avatar || '/assets/icons/user.png'}}"/>
+      </button>
+      <text class="role-badge" wx:if="{{userInfo.role}}">{{userInfo.role === 'boyfriend' ? '小哥哥' : '小姐姐'}}</text>
+    </view>
+    <text class="nickname">{{userInfo.nickname || '未设置昵称'}}</text>
+    <van-button size="small" round type="primary" plain bindtap="showEditModal">编辑资料</van-button>
+  </view>
+
+  <!-- 伴侣信息 -->
+  <view class="partner-section" wx:if="{{partnerInfo}}">
+    <view class="section-title">我的另一半</view>
+    <view class="partner-card">
+      <image class="avatar" src="{{partnerInfo.avatar || '/assets/icons/user.png'}}"/>
+      <view class="partner-info">
+        <text class="partner-name">{{partnerInfo.nickname || 'TA'}}</text>
+        <text class="partner-status">已绑定</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 绑定伴侣 -->
+  <view class="bind-section" wx:if="{{!partnerInfo}}">
+    <van-button type="primary" block round bindtap="showBindModal">绑定另一半</van-button>
+  </view>
+
+  <!-- 统计数据 -->
+  <view class="stats-section">
+    <view class="stats-title">我们的数据</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.moments}}</text>
+        <text class="stat-label">甜蜜时刻</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.wishes}}</text>
+        <text class="stat-label">心愿总数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.completedWishes}}</text>
+        <text class="stat-label">已完成</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 编辑资料弹窗 -->
+  <van-popup show="{{showEditModal}}" round position="bottom" bind:close="hideEditModal">
+    <view class="edit-modal">
+      <view class="modal-title">编辑资料</view>
+      
+      <view class="input-group">
+        <text class="input-label">昵称</text>
+        <input class="input" placeholder="输入昵称" value="{{editForm.nickname}}" bindinput="onNicknameInput"/>
+      </view>
+
+      <view class="input-group">
+        <text class="input-label">在一起的日子</text>
+        <picker mode="date" value="{{editForm.anniversaryDate}}" bindchange="onAnniversaryChange">
+          <view class="picker">
+            {{editForm.anniversaryDate || '选择日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="input-group">
+        <text class="input-label">我的生日</text>
+        <picker mode="date" value="{{editForm.birthday}}" bindchange="onBirthdayChange">
+          <view class="picker">
+            {{editForm.birthday || '选择日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <van-button type="primary" block round bindtap="saveProfile">保存</van-button>
+    </view>
+  </van-popup>
+
+  <!-- 绑定弹窗 -->
+  <van-popup show="{{showBindModal}}" round position="bottom" bind:close="hideBindModal">
+    <view class="bind-modal">
+      <view class="modal-title">绑定另一半</view>
+      <view class="bind-desc">让 TA 在个人中心生成邀请码，然后在这里输入绑定</view>
+      
+      <view class="input-group">
+        <input class="input" placeholder="输入对方邀请码" value="{{partnerCode}}" bindinput="onCodeInput"/>
+      </view>
+
+      <van-button type="primary" block round bindtap="bindPartner">绑定</van-button>
+    </view>
+  </van-popup>
+</view>

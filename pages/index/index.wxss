@@ -1,0 +1,172 @@
+/* pages/index/index.wxss */
+.days-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.days-label {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.days-number {
+  font-size: 100rpx;
+  font-weight: bold;
+  margin: 10rpx 0;
+}
+
+.days-unit {
+  font-size: 32rpx;
+  opacity: 0.9;
+}
+
+.countdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown-label {
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+
+.countdown-number {
+  font-size: 80rpx;
+  font-weight: bold;
+  margin: 10rpx 0;
+}
+
+.countdown-unit {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.anniversary-section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.anniversary-list {
+  margin-top: 20rpx;
+}
+
+.anniversary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.anniversary-item:last-child {
+  border-bottom: none;
+}
+
+.anniversary-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.anniversary-title {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.anniversary-date {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.anniversary-right {
+  display: flex;
+  align-items: center;
+}
+
+.countdown {
+  font-size: 26rpx;
+  color: #FFB6C1;
+  font-weight: 500;
+  margin-right: 20rpx;
+}
+
+.countdown.past {
+  color: #999;
+}
+
+.delete-icon {
+  color: #999;
+}
+
+.empty-tip {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+  font-size: 26rpx;
+}
+
+.add-modal {
+  padding: 40rpx;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.input-group {
+  margin-bottom: 30rpx;
+}
+
+.input {
+  border: 1rpx solid #eee;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+}
+
+.picker {
+  border: 1rpx solid #eee;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.type-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40rpx;
+}
+
+.type-btn {
+  flex: 1;
+  text-align: center;
+  padding: 15rpx 0;
+  margin: 0 10rpx;
+  border: 1rpx solid #eee;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.type-btn.active {
+  background: #FFB6C1;
+  color: #fff;
+  border-color: #FFB6C1;
+}

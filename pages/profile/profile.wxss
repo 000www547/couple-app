@@ -1,0 +1,153 @@
+/* pages/profile/profile.wxss */
+.user-card {
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  border-radius: 20rpx;
+  padding: 50rpx 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+}
+
+.avatar-section {
+  position: relative;
+}
+
+.avatar-btn {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.avatar-btn::after {
+  border: none;
+}
+
+.avatar-large {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 50%;
+  border: 4rpx solid #fff;
+}
+
+.role-badge {
+  position: absolute;
+  bottom: 0;
+  right: -10rpx;
+  background: #FFD700;
+  color: #333;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin: 20rpx 0;
+}
+
+.user-card van-button {
+  margin-top: 10rpx;
+}
+
+.partner-section, .bind-section, .stats-section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-top: 20rpx;
+}
+
+.section-title, .stats-title {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+}
+
+.partner-card {
+  display: flex;
+  align-items: center;
+}
+
+.partner-info {
+  margin-left: 20rpx;
+}
+
+.partner-name {
+  font-size: 30rpx;
+  color: #333;
+  display: block;
+}
+
+.partner-status {
+  font-size: 24rpx;
+  color: #87CEEB;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 40rpx;
+  color: #FFB6C1;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.edit-modal, .bind-modal {
+  padding: 40rpx;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.bind-desc {
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.input-group {
+  margin-bottom: 30rpx;
+}
+
+.input-label {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.input {
+  border: 1rpx solid #eee;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+}
+
+.picker {
+  border: 1rpx solid #eee;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  color: #333;
+}

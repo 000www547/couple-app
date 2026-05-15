@@ -1,0 +1,78 @@
+<!--pages/moments/moments.wxml-->
+<view class="container">
+  <!-- 动态列表 -->
+  <scroll-view scroll-y class="moments-list">
+    <view class="moment-item" wx:for="{{moments}}" wx:key="_id">
+      <!-- 用户信息 -->
+      <view class="moment-header">
+        <image class="avatar" src="{{userInfos[item.userId].avatar || '/assets/icons/user.png'}}"/>
+        <view class="user-info">
+          <text class="nickname">{{userInfos[item.userId].nickname || '匿名用户'}}</text>
+          <text class="time">{{item.createTime}}</text>
+        </view>
+        <van-icon name="delete" class="delete-btn" wx:if="{{currentUser && item.userId === currentUser._openid}}" bindtap="deleteMoment" data-id="{{item._id}}"/>
+      </view>
+
+      <!-- 内容 -->
+      <view class="moment-content">
+        <text>{{item.content}}</text>
+      </view>
+
+      <!-- 图片 -->
+      <view class="moment-images" wx:if="{{item.images && item.images.length > 0}}">
+        <view class="image-wrapper" wx:for="{{item.images}}" wx:for-item="img" wx:key="index" bindtap="previewImage" data-url="{{img}}">
+          <image class="moment-image" src="{{img}}" mode="aspectFill"/>
+        </view>
+      </view>
+
+      <!-- 点赞 -->
+      <view class="moment-footer">
+        <view class="like-btn" bindtap="likeMoment" data-id="{{item._id}}">
+          <van-icon name="like" color="{{item.likedBy && item.likedBy.indexOf(currentUser._openid) > -1 ? '#FFB6C1' : '#999'}}"/>
+          <text class="like-count">{{item.likes || 0}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-tip" wx:if="{{moments.length === 0 && !loading}}">
+      <text>还没有甜蜜时刻，快来记录吧~</text>
+    </view>
+
+    <view class="loading-tip" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+  </scroll-view>
+
+  <!-- 发布按钮 -->
+  <view class="fab" bindtap="showPostModal">
+    <van-icon name="plus" size="40rpx" color="#fff"/>
+  </view>
+
+  <!-- 发布弹窗 -->
+  <van-popup show="{{showPostModal}}" round position="bottom" bind:close="hidePostModal">
+    <view class="post-modal">
+      <view class="modal-header">
+        <text class="modal-title">发布甜蜜时刻</text>
+        <van-icon name="close" bindtap="hidePostModal"/>
+      </view>
+
+      <textarea class="content-input" placeholder="记录你们的甜蜜时刻..." value="{{newMoment.content}}" bindinput="onContentInput" maxlength="500"/>
+
+      <!-- 已选图片 -->
+      <view class="selected-images" wx:if="{{newMoment.images.length > 0}}">
+        <view class="image-item" wx:for="{{newMoment.images}}" wx:key="index">
+          <image class="preview-img" src="{{item}}" mode="aspectFill"/>
+          <van-icon name="clear" class="remove-btn" bindtap="removeImage" data-index="{{index}}"/>
+        </view>
+      </view>
+
+      <view class="modal-footer">
+        <view class="add-image-btn" bindtap="chooseImages">
+          <van-icon name="photograph" size="40rpx"/>
+          <text>添加图片</text>
+        </view>
+        <van-button type="primary" round size="small" bindtap="postMoment">发布</van-button>
+      </view>
+    </view>
+  </van-popup>
+</view>

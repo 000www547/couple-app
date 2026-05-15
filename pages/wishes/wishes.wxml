@@ -1,0 +1,70 @@
+<!--pages/wishes/wishes.wxml-->
+<view class="container">
+  <!-- 进度条 -->
+  <view class="progress-section">
+    <view class="progress-header">
+      <text class="progress-label">完成进度</text>
+      <text class="progress-value">{{wishes.length > 0 ? (wishes.filter(function(w){return w.isCompleted}).length) : 0}}/{{wishes.length}}</text>
+    </view>
+    <van-progress percentage="{{wishes.length > 0 ? Math.round((wishes.filter(function(w){return w.isCompleted}).length / wishes.length) * 100) : 0}}" color="#FFB6C1" track-color="#f0f0f0" stroke-width="8rpx" rounded />
+  </view>
+
+  <!-- Tab切换 -->
+  <van-tabs active="{{activeTab}}" bind:change="onTabChange" color="#FFB6C1">
+    <van-tab title="全部" name="all"></van-tab>
+    <van-tab title="我的" name="my"></van-tab>
+    <van-tab title="共同" name="shared"></van-tab>
+  </van-tabs>
+
+  <!-- 心愿列表 -->
+  <scroll-view scroll-y class="wishes-list">
+    <view class="wish-item {{item.isCompleted ? 'completed' : ''}}" wx:for="{{wishes}}" wx:key="_id">
+      <view class="wish-checkbox" bindtap="toggleComplete" data-id="{{item._id}}">
+        <van-checkbox value="{{item.isCompleted}}" disabled="{{true}}" checked-color="#FFB6C1"/>
+      </view>
+      <view class="wish-content">
+        <text class="wish-title">{{item.title}}</text>
+        <text class="wish-desc" wx:if="{{item.description}}">{{item.description}}</text>
+        <view class="wish-meta" wx:if="{{item.isShared}}">
+          <van-tag type="warning" size="small">共同心愿</van-tag>
+        </view>
+      </view>
+      <van-icon name="delete" class="delete-btn" bindtap="deleteWish" data-id="{{item._id}}"/>
+    </view>
+
+    <view class="empty-tip" wx:if="{{wishes.length === 0 && !loading}}">
+      <text>还没有心愿，快来许个愿吧~</text>
+    </view>
+
+    <view class="loading-tip" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+  </scroll-view>
+
+  <!-- 添加按钮 -->
+  <view class="fab" bindtap="showAddModal">
+    <van-icon name="plus" size="40rpx" color="#fff"/>
+  </view>
+
+  <!-- 添加心愿弹窗 -->
+  <van-popup show="{{showAddModal}}" round position="bottom" bind:close="hideAddModal">
+    <view class="add-modal">
+      <view class="modal-title">添加心愿</view>
+      
+      <view class="input-group">
+        <input class="input" placeholder="输入心愿" value="{{newWish.title}}" bindinput="onTitleInput"/>
+      </view>
+
+      <view class="input-group">
+        <textarea class="textarea" placeholder="添加描述（选填）" value="{{newWish.description}}" bindinput="onDescInput"/>
+      </view>
+
+      <view class="share-option">
+        <text>设为共同心愿</text>
+        <van-switch checked="{{newWish.isShared}}" bind:change="onShareChange" active-color="#FFB6C1"/>
+      </view>
+
+      <van-button type="primary" block round bindtap="addWish">保存</van-button>
+    </view>
+  </van-popup>
+</view>

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "甜蜜时刻",
+  "usingComponents": {
+    "van-button": "@vant/weapp/button/index",
+    "van-icon": "@vant/weapp/icon/index",
+    "van-popup": "@vant/weapp/popup/index"
+  }
+}

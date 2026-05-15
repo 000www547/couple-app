@@ -1,0 +1,81 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 恋爱计时卡片 -->
+  <view class="theme-card">
+    <view class="days-container">
+      <text class="days-label">在一起的第</text>
+      <text class="days-number">{{daysTogether}}</text>
+      <text class="days-unit">天</text>
+    </view>
+  </view>
+
+  <!-- 生日倒计时 -->
+  <view class="theme-card theme-card-blue mt-20" wx:if="{{birthdayCountdown > 0}}">
+    <view class="countdown-container">
+      <text class="countdown-label">距离 TA 的生日还有</text>
+      <text class="countdown-number">{{birthdayCountdown}}</text>
+      <text class="countdown-unit">天</text>
+    </view>
+  </view>
+
+  <!-- 纪念日列表 -->
+  <view class="anniversary-section mt-30">
+    <view class="section-header">
+      <text class="title">纪念日</text>
+      <van-button size="small" type="primary" round bindtap="showAddAnniversary">
+        添加
+      </van-button>
+    </view>
+
+    <view class="anniversary-list">
+      <view class="anniversary-item" wx:for="{{anniversaries}}" wx:key="_id">
+        <view class="anniversary-left">
+          <text class="anniversary-title">{{item.title}}</text>
+          <text class="anniversary-date">{{item.date}}</text>
+        </view>
+        <view class="anniversary-right">
+          <text class="countdown" wx:if="{{!item.isPast}}">{{item.countdown}}天</text>
+          <text class="countdown past" wx:else>已过</text>
+          <van-icon name="delete" class="delete-icon" bindtap="deleteAnniversary" data-id="{{item._id}}"/>
+        </view>
+      </view>
+
+      <view class="empty-tip" wx:if="{{anniversaries.length === 0}}">
+        <text>还没有纪念日，点击添加记录你们的甜蜜时刻~</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加纪念日弹窗 -->
+  <van-popup show="{{showAddModal}}" round position="bottom" bind:close="hideAddModal">
+    <view class="add-modal">
+      <view class="modal-title">添加纪念日</view>
+      
+      <view class="input-group">
+        <input class="input" placeholder="输入纪念日名称" value="{{newAnniversary.title}}" bindinput="onTitleInput"/>
+      </view>
+      
+      <view class="input-group">
+        <picker mode="date" value="{{newAnniversary.date}}" bindchange="onDateChange">
+          <view class="picker">
+            {{newAnniversary.date || '选择日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="type-group">
+        <view class="type-btn {{newAnniversary.type === 'start' ? 'active' : ''}}" bindtap="onTypeChange" data-type="start">
+          在一起
+        </view>
+        <view class="type-btn {{newAnniversary.type === 'birthday' ? 'active' : ''}}" bindtap="onTypeChange" data-type="birthday">
+          生日
+        </view>
+        <view class="type-btn {{newAnniversary.type === 'custom' ? 'active' : ''}}" bindtap="onTypeChange" data-type="custom">
+          其他
+        </view>
+      </view>
+
+      <van-button type="primary" block round bindtap="saveAnniversary">保存</van-button>
+    </view>
+  </van-popup>
+</view>
