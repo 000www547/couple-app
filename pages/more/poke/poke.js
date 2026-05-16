@@ -170,39 +170,48 @@ Page({
       success: () => console.log('震动成功')
     });
 
-    wx.cloud.callFunction({
-      name: 'heartbeat',
-      data: {
-        action: 'send',
-        type: 'poke'
-      }
-    }).then(res => {
-      this.setData({
-        isSending: false,
-        holdTime: 0,
-        progress: 0,
-        holdText: '按住发送'
-      });
-
-      if (res.result.success) {
-        wx.showToast({
-          title: '心跳已发送 💓',
-          icon: 'none'
+    const callHeartbeat = (retryCount = 0) => {
+      wx.cloud.callFunction({
+        name: 'heartbeat',
+        data: {
+          action: 'send',
+          type: 'poke'
+        }
+      }).then(res => {
+        this.setData({
+          isSending: false,
+          holdTime: 0,
+          progress: 0,
+          holdText: '按住发送'
         });
-        this.loadHeartbeats();
-      } else {
-        const msg = res.result.error || '发送失败';
-        wx.showToast({ title: msg, icon: 'none' });
-      }
-    }).catch(err => {
-      this.setData({
-        isSending: false,
-        holdTime: 0,
-        progress: 0,
-        holdText: '按住发送'
+
+        if (res.result.success) {
+          wx.showToast({
+            title: '心跳已发送 💓',
+            icon: 'none'
+          });
+          this.loadHeartbeats();
+        } else {
+          const msg = res.result.error || '发送失败';
+          wx.showToast({ title: msg, icon: 'none' });
+        }
+      }).catch(err => {
+        console.error('发送失败', err, 'retry:', retryCount);
+        // 冷启动超时自动重试一次
+        if (retryCount === 0 && err && err.message && err.message.includes('timeout')) {
+          console.log('检测到超时，自动重试...');
+          callHeartbeat(retryCount + 1);
+          return;
+        }
+        this.setData({
+          isSending: false,
+          holdTime: 0,
+          progress: 0,
+          holdText: '按住发送'
+        });
+        wx.showToast({ title: '发送失败', icon: 'none' });
       });
-      console.error('发送失败', err);
-      wx.showToast({ title: '发送失败', icon: 'none' });
-    });
+    };
+    callHeartbeat();
   }
 });
