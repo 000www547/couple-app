@@ -24,22 +24,6 @@ async function getPartnerId(openid) {
   return null;
 }
 
-// 辅助函数：增加亲密度（仅当两用户互为伴侣时才增加）
-async function addIntimacyIfPartner(userA, userB, amount) {
-  if (!userA || !userB || userA === userB) return;
-
-  const partnerOfA = await getPartnerId(userA);
-  if (partnerOfA !== userB) return; // A 和 B 不是伴侣关系，不增加
-
-  // 双方各增加亲密度
-  await db.collection('users').where({ _openid: userA }).update({
-    data: { intimacy: _.inc(amount), lastIntimacyUpdate: db.serverDate() }
-  });
-  await db.collection('users').where({ _openid: userB }).update({
-    data: { intimacy: _.inc(amount), lastIntimacyUpdate: db.serverDate() }
-  });
-}
-
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
@@ -49,22 +33,57 @@ exports.main = async (event, context) => {
     switch (action) {
       case 'send': {
         // 发送心跳/戳一戳，必须先有绑定伴侣
-        const partnerId = await getPartnerId(openid);
+        // 一次性查询用户数据，避免多次 DB 调用
+        const userRes = await db.collection('users').where({ _openid: openid }).get();
+        if (!userRes.data || userRes.data.length === 0) {
+          return { success: false, error: '用户不存在' };
+        }
+
+        const user = userRes.data[0];
+
+        // 获取伴侣ID（优先 relationships，兼容 activeRelationship）
+        let partnerId = null;
+        if (user.relationships && user.relationships.length > 0) {
+          const active = user.relationships.find(r => r.status === 'active');
+          if (active) partnerId = active.partnerId;
+        }
+        if (!partnerId) partnerId = user.activeRelationship || null;
+
         if (!partnerId) {
           return { success: false, error: '请先绑定伴侣' };
         }
 
+        // 记录心跳
         const heartbeat = {
           userId: openid,
-          partnerId: partnerId, // 记录发送给谁
+          partnerId: partnerId,
           type: event.type || 'heartbeat',
           createTime: db.serverDate(),
           isRead: false
         };
         const addResult = await db.collection('heartbeats').add({ data: heartbeat });
 
-        // 互为伴侣时双方各增加亲密度 +2
-        await addIntimacyIfPartner(openid, partnerId, 2);
+        // 校验 B 的伴侣是不是 A（确保是双向绑定关系）
+        const partnerRes = await db.collection('users').where({ _openid: partnerId }).get();
+        if (partnerRes.data && partnerRes.data.length > 0) {
+          const partner = partnerRes.data[0];
+          let partnerPartnerId = null;
+          if (partner.relationships && partner.relationships.length > 0) {
+            const active = partner.relationships.find(r => r.status === 'active');
+            if (active) partnerPartnerId = active.partnerId;
+          }
+          if (!partnerPartnerId) partnerPartnerId = partner.activeRelationship || null;
+
+          if (partnerPartnerId === openid) {
+            // 双方互为伴侣，各+2
+            await db.collection('users').where({ _openid: openid }).update({
+              data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
+            });
+            await db.collection('users').where({ _openid: partnerId }).update({
+              data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
+            });
+          }
+        }
 
         return { success: true, id: addResult._id };
       }

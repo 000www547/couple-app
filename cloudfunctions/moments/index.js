@@ -5,41 +5,6 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
 const _ = db.command;
 
-// 辅助函数：获取用户的伴侣ID
-async function getPartnerId(openid) {
-  const userRes = await db.collection('users').where({ _openid: openid }).get();
-  if (!userRes.data || userRes.data.length === 0) return null;
-
-  const user = userRes.data[0];
-
-  // 优先从 relationships 数组中查找状态为 active 的伴侣
-  if (user.relationships && user.relationships.length > 0) {
-    const active = user.relationships.find(r => r.status === 'active');
-    if (active) return active.partnerId;
-  }
-
-  // 兼容旧数据：activeRelationship 字段
-  if (user.activeRelationship) return user.activeRelationship;
-
-  return null;
-}
-
-// 辅助函数：增加亲密度（仅当两用户互为伴侣时才增加）
-async function addIntimacyIfPartner(userA, userB, amount) {
-  if (!userA || !userB || userA === userB) return;
-
-  const partnerOfA = await getPartnerId(userA);
-  if (partnerOfA !== userB) return; // A 和 B 不是伴侣关系，不增加
-
-  // 双方各增加亲密度
-  await db.collection('users').where({ _openid: userA }).update({
-    data: { intimacy: _.inc(amount), lastIntimacyUpdate: db.serverDate() }
-  });
-  await db.collection('users').where({ _openid: userB }).update({
-    data: { intimacy: _.inc(amount), lastIntimacyUpdate: db.serverDate() }
-  });
-}
-
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
@@ -102,9 +67,27 @@ exports.main = async (event, context) => {
           await db.collection('moments').doc(event.momentId).update({
             data: { likes: _.inc(1), likedBy: _.push(openid) }
           });
-          // 只有非本人点赞 且 互为伴侣 时才增加亲密度（双方各+1）
+          // 非本人点赞 且 互为伴侣 时才增加亲密度（双方各+1）
           if (openid !== momentOwner) {
-            await addIntimacyIfPartner(openid, momentOwner, 1);
+            const userA = await db.collection('users').where({ _openid: openid }).get();
+            if (userA.data && userA.data.length > 0) {
+              const u = userA.data[0];
+              let partnerOfA = null;
+              if (u.relationships && u.relationships.length > 0) {
+                const active = u.relationships.find(r => r.status === 'active');
+                if (active) partnerOfA = active.partnerId;
+              }
+              if (!partnerOfA) partnerOfA = u.activeRelationship || null;
+
+              if (partnerOfA === momentOwner) {
+                await db.collection('users').where({ _openid: openid }).update({
+                  data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
+                });
+                await db.collection('users').where({ _openid: momentOwner }).update({
+                  data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
+                });
+              }
+            }
           }
         }
         return { success: true, liked: !isLiked };
@@ -135,9 +118,28 @@ exports.main = async (event, context) => {
         };
         await db.collection('comments').add({ data: newComment });
 
-        // 只有非本人评论 且 互为伴侣 时才增加亲密度（双方各+1）
+        // 非本人评论 且 互为伴侣 时才增加亲密度（双方各+1）
+        // 优化：只查一次 A 的数据
         if (openid !== momentOwner) {
-          await addIntimacyIfPartner(openid, momentOwner, 1);
+          const userA = await db.collection('users').where({ _openid: openid }).get();
+          if (userA.data && userA.data.length > 0) {
+            const u = userA.data[0];
+            let partnerOfA = null;
+            if (u.relationships && u.relationships.length > 0) {
+              const active = u.relationships.find(r => r.status === 'active');
+              if (active) partnerOfA = active.partnerId;
+            }
+            if (!partnerOfA) partnerOfA = u.activeRelationship || null;
+
+            if (partnerOfA === momentOwner) {
+              await db.collection('users').where({ _openid: openid }).update({
+                data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
+              });
+              await db.collection('users').where({ _openid: momentOwner }).update({
+                data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
+              });
+            }
+          }
         }
         return { success: true };
       }
