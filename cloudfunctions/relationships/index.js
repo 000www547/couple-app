@@ -162,7 +162,8 @@ async function bindRelationship(openid, event) {
 
     await db.collection('users').doc(partner._id).update({
       data: {
-        relationships: partnerRelationships
+        relationships: partnerRelationships,
+        activeRelationship: openid
       }
     });
   }
