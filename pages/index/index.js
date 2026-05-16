@@ -83,8 +83,10 @@ Page({
   },
 
   calculateDaysTogether: function(startDate) {
-    const start = new Date(startDate);
+    const [y, m, d] = startDate.split('-').map(Number);
+    const start = new Date(y, m - 1, d);
     const now = new Date();
+    now.setHours(0, 0, 0, 0);
     return Math.floor((now - start) / (1000 * 60 * 60 * 24));
   },
 
@@ -105,9 +107,7 @@ Page({
   calculateBirthdayCountdown: function(birthday) {
     if (!birthday) return 0;
     const now = new Date();
-    // 获取今天的日期字符串（只比较月日）
-    const todayMonth = now.getMonth() + 1;
-    const todayDay = now.getDate();
+    now.setHours(0, 0, 0, 0);
 
     // 解析生日的月日
     const [year, month, day] = birthday.split('-').map(Number);
@@ -127,8 +127,10 @@ Page({
   },
 
   calculateCountdown: function(dateStr) {
-    const date = new Date(dateStr);
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
     const now = new Date();
+    now.setHours(0, 0, 0, 0);
     return Math.floor((date - now) / (1000 * 60 * 60 * 24));
   },
 
