@@ -25,6 +25,16 @@ exports.main = async (event, context) => {
           data: heartbeat
         });
 
+        // 增加亲密度 +2（戳一戳）
+        await db.collection('users').where({
+          _openid: openid
+        }).update({
+          data: {
+            intimacy: _.inc(2),
+            lastIntimacyUpdate: db.serverDate()
+          }
+        });
+
         return {
           success: true,
           id: addResult._id

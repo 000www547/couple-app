@@ -13,6 +13,8 @@ Page({
     pinnedAnniversary: null,
     currentPinnedIndex: 0, // 当前首页显示第几个纪念日
     today: '', // 今天日期，用于日期选择限制
+    intimacyLevel: 1, // 亲密度等级
+    intimacy: 0, // 亲密度点数
     newAnniversary: {
       title: '',
       date: '',
@@ -44,6 +46,15 @@ Page({
         this.setData({ userInfo: user });
         app.globalData.userInfo = user;
         app.globalData.isLoggedIn = true;
+
+        // 计算亲密度等级
+        const intimacy = user.intimacy || 0;
+        const intimacyLevel = this.calculateIntimacyLevel(intimacy);
+        this.setData({
+          intimacy: intimacy,
+          intimacyLevel: intimacyLevel
+        });
+
         this.loadAnniversaries();
       } else {
         wx.showToast({
@@ -77,15 +88,42 @@ Page({
     return Math.floor((now - start) / (1000 * 60 * 60 * 24));
   },
 
+  // 计算亲密度等级
+  calculateIntimacyLevel: function(intimacy) {
+    if (intimacy >= 500) return 10;
+    if (intimacy >= 300) return 9;
+    if (intimacy >= 200) return 8;
+    if (intimacy >= 150) return 7;
+    if (intimacy >= 100) return 6;
+    if (intimacy >= 70) return 5;
+    if (intimacy >= 40) return 4;
+    if (intimacy >= 20) return 3;
+    if (intimacy >= 10) return 2;
+    return 1;
+  },
+
   calculateBirthdayCountdown: function(birthday) {
     if (!birthday) return 0;
     const now = new Date();
-    let birthdayDate = new Date(birthday);
-    birthdayDate.setFullYear(now.getFullYear());
-    if (birthdayDate < now) {
-      birthdayDate.setFullYear(now.getFullYear() + 1);
+    // 获取今天的日期字符串（只比较月日）
+    const todayMonth = now.getMonth() + 1;
+    const todayDay = now.getDate();
+
+    // 解析生日的月日
+    const [year, month, day] = birthday.split('-').map(Number);
+
+    // 计算到今年生日的天数
+    let thisYearBirthday = new Date(now.getFullYear(), month - 1, day);
+    // 如果今年生日已过，计算到明年
+    if (thisYearBirthday < now) {
+      thisYearBirthday = new Date(now.getFullYear() + 1, month - 1, day);
     }
-    return Math.floor((birthdayDate - now) / (1000 * 60 * 60 * 24));
+
+    // 计算天数差，向上取整以确保正确性
+    const diffTime = thisYearBirthday - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays;
   },
 
   calculateCountdown: function(dateStr) {
@@ -151,9 +189,14 @@ Page({
         const currentIndex = that.data.currentPinnedIndex || 0;
         const validIndex = anniversaries.length > 0 ? currentIndex % anniversaries.length : 0;
 
+        // 找到第一个生日类型作为生日倒计时显示
+        const birthdayAnniversary = anniversaries.find(a => a.type === 'birthday');
+        const birthdayCountdown = birthdayAnniversary ? birthdayAnniversary.countdown : 0;
+
         that.setData({
           anniversaries,
-          currentPinnedIndex: validIndex
+          currentPinnedIndex: validIndex,
+          birthdayCountdown: birthdayCountdown
         });
         that.updateHeroCard();
       },

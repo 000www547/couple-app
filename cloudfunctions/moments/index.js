@@ -145,6 +145,16 @@ exports.main = async (event, context) => {
           data: newComment
         });
 
+        // 增加亲密度 +1（评论甜蜜时刻）
+        await db.collection('users').where({
+          _openid: openid
+        }).update({
+          data: {
+            intimacy: _.inc(1),
+            lastIntimacyUpdate: db.serverDate()
+          }
+        });
+
         return {
           success: true
         };

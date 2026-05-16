@@ -36,7 +36,9 @@ exports.main = async (event, context) => {
           anniversaryDate: user.anniversaryDate || '',
           activeRelationship: user.activeRelationship || null,
           relationships: user.relationships || [],
-          partnerBirthday: user.partnerBirthday || ''
+          partnerBirthday: user.partnerBirthday || '',
+          intimacy: user.intimacy || 0,  // 亲密度
+          lastIntimacyUpdate: user.lastIntimacyUpdate || null  // 上次更新时间
         }
       };
     } else {
@@ -53,6 +55,8 @@ exports.main = async (event, context) => {
           activeRelationship: null,
           relationships: [],
           partnerBirthday: '',
+          intimacy: 0,  // 初始亲密度为0
+          lastIntimacyUpdate: null,  // 上次更新时间
           createTime: db.serverDate()
         }
       });
@@ -69,7 +73,9 @@ exports.main = async (event, context) => {
           anniversaryDate: '',
           activeRelationship: null,
           relationships: [],
-          partnerBirthday: ''
+          partnerBirthday: '',
+          intimacy: 0,  // 初始亲密度为0
+          lastIntimacyUpdate: null
         }
       };
     }

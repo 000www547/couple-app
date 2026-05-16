@@ -35,17 +35,24 @@
       <text class="stat-card-label">生日倒数</text>
     </view>
     <view class="stat-card">
-      <text class="stat-card-number">Lv.1</text>
+      <text class="stat-card-number">Lv.{{intimacyLevel}}</text>
       <text class="stat-card-label">亲密度</text>
     </view>
   </view>
 
   <!-- 生日倒计时 -->
   <view class="sub-card" wx:if="{{birthdayCountdown > 0}}">
-    <text class="sub-label">距离 TA 的生日</text>
+    <text class="sub-label">距离下次生日还有</text>
     <view class="sub-content">
       <text class="sub-number">{{birthdayCountdown}}</text>
       <text class="sub-unit">天</text>
+    </view>
+  </view>
+  <view class="sub-card birthday-today" wx:if="{{birthdayCountdown == 0}}">
+    <text class="sub-label">🎂 今天是个特别的日子！</text>
+    <view class="sub-content">
+      <text class="sub-number">生日</text>
+      <text class="sub-unit">🎉</text>
     </view>
   </view>
 
@@ -66,10 +73,11 @@
           <text class="anniversary-date">{{item.date}}</text>
         </view>
         <view class="anniversary-right">
-          <text class="countdown" wx:if="{{item.type === 'birthday'}}">{{item.displayCountdown}} 天</text>
+          <text class="countdown" wx:if="{{item.type === 'birthday' && item.displayCountdown > 0}}">距下次 {{item.displayCountdown}} 天</text>
+          <text class="countdown birthday-today-tag" wx:if="{{item.type === 'birthday' && item.displayCountdown == 0}}">🎂 今天</text>
           <text class="countdown" wx:elif="{{item.type === 'start'}}">第 {{item.displayCountdown}} 天</text>
-          <text class="countdown" wx:elif="{{item.type === 'custom' && item.countdown >= 0}}">{{item.displayCountdown}} 天</text>
-          <text class="countdown past" wx:elif="{{item.type === 'custom' && item.countdown < 0}}">{{item.displayCountdown}} 天</text>
+          <text class="countdown" wx:elif="{{item.type === 'custom' && item.countdown >= 0}}">距 {{item.displayCountdown}} 天</text>
+          <text class="countdown past" wx:elif="{{item.type === 'custom' && item.countdown < 0}}">第 {{item.displayCountdown}} 天</text>
           <van-icon name="delete-o" class="delete-icon" bindtap="deleteAnniversary" data-id="{{item._id}}"/>
         </view>
       </view>

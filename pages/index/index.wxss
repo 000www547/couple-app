@@ -188,6 +188,22 @@
   opacity: 0.6;
 }
 
+/* 生日今天特殊样式 */
+.birthday-today {
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8FAB 100%);
+}
+
+.birthday-today .sub-label {
+  font-size: 28rpx;
+  opacity: 1;
+  color: #fff;
+}
+
+.birthday-today .sub-unit {
+  font-size: 32rpx;
+  opacity: 1;
+}
+
 /* ==================== 纪念日区域 ==================== */
 .anniversary-section {
   margin-top: 40rpx;
@@ -275,6 +291,12 @@
 .countdown.past {
   color: #999;
   background: #F5F5F5;
+}
+
+.birthday-today-tag {
+  color: #FF6B9D;
+  background: rgba(255, 107, 157, 0.15);
+  font-weight: 700;
 }
 
 .delete-icon {

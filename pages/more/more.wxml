@@ -6,6 +6,23 @@
     <text class="header-subtitle">发现情侣互动新玩法</text>
   </view>
 
+  <!-- 亲密度卡片 -->
+  <view class="intimacy-card" bindtap="showIntimacyHelp">
+    <view class="intimacy-left">
+      <view class="intimacy-icon">
+        <text>💕</text>
+      </view>
+      <view class="intimacy-info">
+        <text class="intimacy-label">亲密度</text>
+        <text class="intimacy-desc">点击查看如何提升</text>
+      </view>
+    </view>
+    <view class="intimacy-right">
+      <text class="intimacy-level">Lv.{{intimacyLevel}}</text>
+      <text class="intimacy-count">{{intimacy}}点</text>
+    </view>
+  </view>
+
   <!-- 功能入口网格 -->
   <view class="feature-grid">
     <view class="feature-card" bindtap="goToPoke">
@@ -13,7 +30,7 @@
         <text class="feature-icon">💗</text>
       </view>
       <text class="feature-name">戳一戳</text>
-      <text class="feature-desc">长按发送心跳</text>
+      <text class="feature-desc">长按发送心跳 +2</text>
     </view>
 
     <!-- 预留更多功能入口 -->
