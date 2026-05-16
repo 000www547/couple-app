@@ -89,7 +89,7 @@ Page({
 
   onShareChange: function(e) {
     this.setData({
-      'newWish.isShared': e.detail.value
+      'newWish.isShared': e.detail.value === true
     });
   },
 

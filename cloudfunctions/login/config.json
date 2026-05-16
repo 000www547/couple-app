@@ -1,7 +1,8 @@
 {
   "permissions": {
-    "openapi": ["路人无"]
+    "openapi": []
   },
-  "desc": "登录云函数",
-  "supportsAsync": true
+  "desc": "登录云函数 - 自动创建/获取用户",
+  "supportsAsync": true,
+  "timeout": 30
 }

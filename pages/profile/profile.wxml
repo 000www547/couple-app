@@ -98,7 +98,7 @@
       </view>
 
       <view class="input-group">
-        <text class="input-label">在一起的日子</text>
+        <text class="input-label">在一起的日子（选填）</text>
         <picker mode="date" value="{{editForm.anniversaryDate}}" bindchange="onAnniversaryChange">
           <view class="picker">
             {{editForm.anniversaryDate || '选择日期'}}
@@ -107,10 +107,10 @@
       </view>
 
       <view class="input-group">
-        <text class="input-label">我的生日</text>
+        <text class="input-label">我的生日（选填，可保密）</text>
         <picker mode="date" value="{{editForm.birthday}}" bindchange="onBirthdayChange">
           <view class="picker">
-            {{editForm.birthday || '选择日期'}}
+            {{editForm.birthday || '选择日期或留空'}}
           </view>
         </picker>
       </view>

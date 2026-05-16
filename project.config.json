@@ -57,6 +57,6 @@
   },
   "cloudfunctionRoot": "cloudfunctions/",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
-  "cloudfunctionEnv": "cloud1-d3glxwci0275ec3b",
+  "cloudfunctionEnv": "cloud1-d3glxwci0275ec8b",
   "simulatorPluginLibVersion": {}
 }
