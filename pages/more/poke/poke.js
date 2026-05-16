@@ -191,7 +191,8 @@ Page({
         });
         this.loadHeartbeats();
       } else {
-        wx.showToast({ title: '发送失败', icon: 'none' });
+        const msg = res.result.error || '发送失败';
+        wx.showToast({ title: msg, icon: 'none' });
       }
     }).catch(err => {
       this.setData({
