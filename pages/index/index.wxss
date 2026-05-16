@@ -289,8 +289,8 @@
 }
 
 .countdown.past {
-  color: #999;
-  background: #F5F5F5;
+  color: #FF6B9D;
+  background: rgba(255, 107, 157, 0.08);
 }
 
 .birthday-today-tag {

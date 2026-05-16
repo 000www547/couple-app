@@ -77,7 +77,7 @@
           <text class="countdown birthday-today-tag" wx:if="{{item.type === 'birthday' && item.displayCountdown == 0}}">🎂 今天</text>
           <text class="countdown" wx:elif="{{item.type === 'start'}}">第 {{item.displayCountdown}} 天</text>
           <text class="countdown" wx:elif="{{item.type === 'custom' && item.countdown >= 0}}">距 {{item.displayCountdown}} 天</text>
-          <text class="countdown past" wx:elif="{{item.type === 'custom' && item.countdown < 0}}">第 {{item.displayCountdown}} 天</text>
+          <text class="countdown" wx:elif="{{item.type === 'custom' && item.countdown < 0}}">第 {{item.displayCountdown}} 天</text>
           <van-icon name="delete-o" class="delete-icon" bindtap="deleteAnniversary" data-id="{{item._id}}"/>
         </view>
       </view>
