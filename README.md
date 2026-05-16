@@ -66,12 +66,12 @@ couple-app/
 
 - 打开微信开发者工具
 - 点击「云开发」按钮，创建环境（环境ID记住后面需要用到）
-- 本项目的云环境ID：`cloud1-d3glxwci0275ec8b`
+- 本项目的云环境ID：`cloud1-d3glxwci0275ec8b`（已绑定，无需手动配置）
 
 ### 2. 配置项目
 
-- 打开 `app.js`，将 `env: 'your-env-id'` 改为你的云开发环境ID
 - 打开 `project.config.json`，将 `appid` 改为你的小程序AppID
+- `app.js` 已使用 `wx.cloud.DYNAMIC_CURRENT_ENV`，无需修改云环境配置
 
 ### 3. 创建数据库集合
 
@@ -79,13 +79,12 @@ couple-app/
 
 | 集合名 | 说明 | 安全规则 |
 |--------|------|----------|
-| `users` | 用户表（含亲密度字段） | 默认 |
+| `users` | 用户表（含亲密度、关系数据） | 默认 |
 | `anniversaries` | 纪念日表 | read: true, write: auth.openid != null |
 | `moments` | 甜蜜时刻表 | read: true, write: auth.openid != null |
 | `comments` | 评论表 | read: true, write: auth.openid != null |
 | `heartbeats` | 心跳记录表 | read: true, write: auth.openid != null |
 | `wishes` | 心愿清单表 | read: true, write: auth.openid != null |
-| `relationships` | 关系表 | 默认 |
 
 ### 4. 部署云函数
 
