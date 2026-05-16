@@ -5,25 +5,6 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
 const _ = db.command;
 
-// 辅助函数：获取用户的伴侣ID
-async function getPartnerId(openid) {
-  const userRes = await db.collection('users').where({ _openid: openid }).get();
-  if (!userRes.data || userRes.data.length === 0) return null;
-
-  const user = userRes.data[0];
-
-  // 优先从 relationships 数组中查找状态为 active 的伴侣
-  if (user.relationships && user.relationships.length > 0) {
-    const active = user.relationships.find(r => r.status === 'active');
-    if (active) return active.partnerId;
-  }
-
-  // 兼容旧数据：activeRelationship 字段
-  if (user.activeRelationship) return user.activeRelationship;
-
-  return null;
-}
-
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
@@ -33,27 +14,24 @@ exports.main = async (event, context) => {
     switch (action) {
       case 'send': {
         // 发送心跳/戳一戳，必须先有绑定伴侣
-        // 一次性查询用户数据，避免多次 DB 调用
+        // 只做一次用户查询，内联获取伴侣ID并校验双向关系
         const userRes = await db.collection('users').where({ _openid: openid }).get();
         if (!userRes.data || userRes.data.length === 0) {
           return { success: false, error: '用户不存在' };
         }
 
         const user = userRes.data[0];
-
-        // 获取伴侣ID（优先 relationships，兼容 activeRelationship）
         let partnerId = null;
         if (user.relationships && user.relationships.length > 0) {
           const active = user.relationships.find(r => r.status === 'active');
           if (active) partnerId = active.partnerId;
         }
         if (!partnerId) partnerId = user.activeRelationship || null;
-
         if (!partnerId) {
           return { success: false, error: '请先绑定伴侣' };
         }
 
-        // 记录心跳
+        // 记录心跳（第2次DB调用）
         const heartbeat = {
           userId: openid,
           partnerId: partnerId,
@@ -63,7 +41,7 @@ exports.main = async (event, context) => {
         };
         const addResult = await db.collection('heartbeats').add({ data: heartbeat });
 
-        // 校验 B 的伴侣是不是 A（确保是双向绑定关系）
+        // 校验双向绑定关系（第3次DB调用：查伴侣的relationships）
         const partnerRes = await db.collection('users').where({ _openid: partnerId }).get();
         if (partnerRes.data && partnerRes.data.length > 0) {
           const partner = partnerRes.data[0];
@@ -75,13 +53,15 @@ exports.main = async (event, context) => {
           if (!partnerPartnerId) partnerPartnerId = partner.activeRelationship || null;
 
           if (partnerPartnerId === openid) {
-            // 双方互为伴侣，各+2
-            await db.collection('users').where({ _openid: openid }).update({
-              data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
-            });
-            await db.collection('users').where({ _openid: partnerId }).update({
-              data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
-            });
+            // 双方互为伴侣，各+2（第4、5次DB调用，并行执行）
+            await Promise.all([
+              db.collection('users').where({ _openid: openid }).update({
+                data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
+              }),
+              db.collection('users').where({ _openid: partnerId }).update({
+                data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
+              })
+            ]);
           }
         }
 
@@ -91,8 +71,19 @@ exports.main = async (event, context) => {
       case 'getList': {
         // 获取心跳列表（仅显示自己和伴侣的）
         let userIds = [openid];
-        const partnerId = await getPartnerId(openid);
-        if (partnerId) userIds.push(partnerId);
+
+        // 内联获取伴侣ID，避免单独函数调用
+        const userListRes = await db.collection('users').where({ _openid: openid }).get();
+        if (userListRes.data && userListRes.data.length > 0) {
+          const u = userListRes.data[0];
+          let pid = null;
+          if (u.relationships && u.relationships.length > 0) {
+            const active = u.relationships.find(r => r.status === 'active');
+            if (active) pid = active.partnerId;
+          }
+          if (!pid) pid = u.activeRelationship || null;
+          if (pid) userIds.push(pid);
+        }
 
         const listResult = await db.collection('heartbeats')
           .where({ userId: _.in(userIds) })
@@ -119,8 +110,17 @@ exports.main = async (event, context) => {
 
       case 'getUnreadCount': {
         let unreadUserIds = [openid];
-        const partnerId = await getPartnerId(openid);
-        if (partnerId) unreadUserIds.push(partnerId);
+        const unreadUserRes = await db.collection('users').where({ _openid: openid }).get();
+        if (unreadUserRes.data && unreadUserRes.data.length > 0) {
+          const u = unreadUserRes.data[0];
+          let pid = null;
+          if (u.relationships && u.relationships.length > 0) {
+            const active = u.relationships.find(r => r.status === 'active');
+            if (active) pid = active.partnerId;
+          }
+          if (!pid) pid = u.activeRelationship || null;
+          if (pid) unreadUserIds.push(pid);
+        }
 
         const unreadResult = await db.collection('heartbeats')
           .where({
