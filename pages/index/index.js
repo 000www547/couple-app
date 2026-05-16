@@ -195,6 +195,18 @@ Page({
         const birthdayAnniversary = anniversaries.find(a => a.type === 'birthday');
         const birthdayCountdown = birthdayAnniversary ? birthdayAnniversary.countdown : 0;
 
+        // 如果没有纪念日，立即清空首页主卡片，防止旧数据残留
+        if (anniversaries.length === 0) {
+          that.setData({
+            anniversaries: [],
+            currentPinnedIndex: 0,
+            birthdayCountdown: 0,
+            pinnedAnniversary: null,
+            currentPinnedLabel: '添加你们的第一个纪念日'
+          });
+          return; // 直接返回，不再调用 updateHeroCard
+        }
+
         that.setData({
           anniversaries,
           currentPinnedIndex: validIndex,
