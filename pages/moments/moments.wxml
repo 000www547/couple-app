@@ -64,7 +64,7 @@
         <!-- 评论输入框 -->
         <view class="comment-input-area">
           <input class="comment-input" placeholder="{{replyingTo ? '回复 @' + replyingTo : '写评论...'}}" value="{{commentInputs[item._id]}}" bindinput="onCommentInput" data-momentid="{{item._id}}"/>
-          <van-button size="small" type="primary" round bindtap="submitComment" data-momentid="{{item._id}}">发送</van-button>
+          <van-button size="small" color="#FF6B9D" round bindtap="submitComment" data-momentid="{{item._id}}">发送</van-button>
         </view>
       </view>
     </view>
@@ -106,7 +106,7 @@
           <van-icon name="photograph" size="40rpx"/>
           <text>添加图片</text>
         </view>
-        <van-button type="primary" round size="small" bindtap="postMoment">发布</van-button>
+        <van-button color="#1A1A1A" round size="small" bindtap="postMoment">发布</van-button>
       </view>
     </view>
   </van-popup>

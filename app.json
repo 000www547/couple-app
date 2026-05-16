@@ -8,10 +8,10 @@
     "pages/more/poke/poke"
   ],
   "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#FFB6C1",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#F5F5F7",
     "navigationBarTitleText": "泡芙空间",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#999999",

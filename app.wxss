@@ -1,13 +1,15 @@
 /** app.wxss **/
 page {
-  --primary-pink: #FFB6C1;
-  --primary-blue: #87CEEB;
-  --primary-yellow: #FFD700;
+  --primary-pink: #FF6B9D;
+  --primary-dark: #1A1A1A;
+  --card-dark: #2D2D2D;
+  --card-dark-secondary: #3D3D3D;
   --text-color: #333333;
-  --text-light: #666666;
-  --bg-color: #f8f8f8;
+  --text-light: #999999;
+  --text-muted: #666666;
+  --bg-color: #F5F5F7;
   --white: #ffffff;
-  
+
   background-color: var(--bg-color);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-size: 28rpx;
@@ -15,110 +17,232 @@ page {
 }
 
 .container {
-  padding: 20rpx;
+  padding: 30rpx;
 }
 
-/* 主题色卡片 */
-.theme-card {
-  background: linear-gradient(135deg, var(--primary-pink), var(--primary-blue));
-  border-radius: 20rpx;
+/* ==================== 深色卡片系统 ==================== */
+.dark-card {
+  background: var(--primary-dark);
+  border-radius: 28rpx;
   padding: 40rpx;
   color: var(--white);
-  box-shadow: 0 8rpx 20rpx rgba(255, 182, 193, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-.theme-card-blue {
-  background: linear-gradient(135deg, var(--primary-blue), #6BB3D9);
+.dark-card-secondary {
+  background: var(--card-dark);
+  border-radius: 24rpx;
+  padding: 30rpx;
+  color: var(--white);
 }
 
-.theme-card-yellow {
-  background: linear-gradient(135deg, var(--primary-yellow), #FFC107);
+.dark-card-tertiary {
+  background: var(--card-dark-secondary);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  color: var(--white);
 }
 
-/* 通用按钮样式 */
+/* 卡片微光效果 */
+.dark-card::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -15%;
+  width: 250rpx;
+  height: 250rpx;
+  background: rgba(255, 107, 157, 0.08);
+  border-radius: 50%;
+}
+
+/* ==================== 浅色卡片系统 ==================== */
+.light-card {
+  background: var(--white);
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+/* ==================== 按钮系统 ==================== */
 .btn-primary {
+  background: var(--primary-dark);
+  color: var(--white);
+  border-radius: 40rpx;
+  padding: 24rpx 60rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.btn-pink {
   background: var(--primary-pink);
   color: var(--white);
   border-radius: 40rpx;
-  padding: 20rpx 60rpx;
+  padding: 24rpx 60rpx;
   font-size: 28rpx;
+  font-weight: 500;
 }
 
-.btn-secondary {
-  background: var(--primary-blue);
-  color: var(--white);
+.btn-outline {
+  background: transparent;
+  color: var(--text-color);
+  border: 2rpx solid #E5E5E5;
   border-radius: 40rpx;
-  padding: 20rpx 60rpx;
+  padding: 24rpx 60rpx;
   font-size: 28rpx;
 }
 
-/* 标题样式 */
+.btn-dark-outline {
+  background: transparent;
+  color: var(--white);
+  border: 2rpx solid rgba(255, 255, 255, 0.2);
+  border-radius: 40rpx;
+  padding: 20rpx 40rpx;
+  font-size: 26rpx;
+}
+
+/* ==================== 标题系统 ==================== */
+.title-large {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 24rpx;
+}
+
 .title {
-  font-size: 36rpx;
-  font-weight: bold;
+  font-size: 32rpx;
+  font-weight: 600;
   color: var(--text-color);
   margin-bottom: 20rpx;
 }
 
 .title-small {
-  font-size: 28rpx;
-  color: var(--text-light);
+  font-size: 26rpx;
+  color: var(--text-muted);
+  font-weight: 400;
 }
 
-/* flex 辅助类 */
-.flex {
-  display: flex;
+.title-white {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--white);
 }
 
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* ==================== Flex 辅助类 ==================== */
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-column { display: flex; flex-direction: column; }
+.flex-wrap { display: flex; flex-wrap: wrap; }
 
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
-
-/* 间距 */
+/* ==================== 间距系统 ==================== */
 .mt-10 { margin-top: 10rpx; }
+.mt-16 { margin-top: 16rpx; }
 .mt-20 { margin-top: 20rpx; }
+.mt-24 { margin-top: 24rpx; }
 .mt-30 { margin-top: 30rpx; }
 .mt-40 { margin-top: 40rpx; }
 
 .mb-10 { margin-bottom: 10rpx; }
+.mb-16 { margin-bottom: 16rpx; }
 .mb-20 { margin-bottom: 20rpx; }
+.mb-24 { margin-bottom: 24rpx; }
 .mb-30 { margin-bottom: 30rpx; }
 
 .p-20 { padding: 20rpx; }
+.p-24 { padding: 24rpx; }
 .p-30 { padding: 30rpx; }
 
-/* 圆形头像 */
+/* ==================== 头像系统 ==================== */
 .avatar {
-  width: 100rpx;
-  height: 100rpx;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
   overflow: hidden;
 }
 
 .avatar-large {
-  width: 150rpx;
-  height: 150rpx;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
 }
 
 .avatar-small {
-  width: 60rpx;
-  height: 60rpx;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
 }
 
-/* 背景图片 */
+/* ==================== 标签/徽章 ==================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.badge-pink {
+  background: rgba(255, 107, 157, 0.15);
+  color: var(--primary-pink);
+}
+
+.badge-dark {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ==================== 输入框样式 ==================== */
+.input-dark {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2rpx solid rgba(255, 255, 255, 0.1);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: var(--white);
+}
+
+.input-light {
+  background: #F8F8F8;
+  border: 2rpx solid #EEEEEE;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: var(--text-color);
+}
+
+.picker-dark {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2rpx solid rgba(255, 255, 255, 0.1);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: var(--white);
+}
+
+.picker-light {
+  background: #F8F8F8;
+  border: 2rpx solid #EEEEEE;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: var(--text-color);
+}
+
+/* ==================== 分割线 ==================== */
+.divider {
+  height: 1rpx;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 20rpx 0;
+}
+
+.divider-light {
+  height: 1rpx;
+  background: #EEEEEE;
+  margin: 20rpx 0;
+}
+
+/* ==================== 背景色 ==================== */
 .bg-pink { background-color: var(--primary-pink); }
-.bg-blue { background-color: var(--primary-blue); }
-.bg-yellow { background-color: var(--primary-yellow); }
+.bg-dark { background-color: var(--primary-dark); }

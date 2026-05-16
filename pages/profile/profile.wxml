@@ -9,7 +9,7 @@
       <text class="role-badge" wx:if="{{userInfo.role}}">{{userInfo.role === 'boyfriend' ? '小哥哥' : '小姐姐'}}</text>
     </view>
     <text class="nickname">{{userInfo.nickname || '未设置昵称'}}</text>
-    <van-button size="small" round type="primary" plain bindtap="showEditModal">编辑资料</van-button>
+    <van-button size="small" round color="#FF6B9D" plain bindtap="showEditModal">编辑资料</van-button>
   </view>
 
   <!-- 邀请码展示 -->
@@ -22,7 +22,7 @@
       <view class="invite-code-box">
         <text class="invite-code">{{userInfo.inviteCode}}</text>
       </view>
-      <van-button type="primary" size="small" round bindtap="copyInviteCode">复制邀请码</van-button>
+      <van-button color="#FF6B9D" size="small" round bindtap="copyInviteCode">复制邀请码</van-button>
     </view>
   </view>
 
@@ -43,7 +43,7 @@
 
   <!-- 绑定伴侣 -->
   <view class="bind-section" wx:if="{{!partnerInfo}}">
-    <van-button type="primary" block round bindtap="showBindModal">绑定另一半</van-button>
+    <van-button color="#1A1A1A" block round bindtap="showBindModal">绑定另一半</van-button>
   </view>
 
   <!-- 关系列表 -->
@@ -115,7 +115,7 @@
         </picker>
       </view>
 
-      <van-button type="primary" block round bindtap="saveProfile">保存</van-button>
+      <van-button color="#1A1A1A" block round bindtap="saveProfile">保存</van-button>
     </view>
   </van-popup>
 
@@ -150,7 +150,7 @@
         <input class="input" placeholder="输入对方邀请码" value="{{partnerCode}}" bindinput="onCodeInput"/>
       </view>
 
-      <van-button type="primary" block round bindtap="bindPartner">绑定</van-button>
+      <van-button color="#1A1A1A" block round bindtap="bindPartner">绑定</van-button>
     </view>
   </van-popup>
 

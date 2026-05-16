@@ -6,11 +6,11 @@
       <text class="progress-label">完成进度</text>
       <text class="progress-value">{{completedCount || 0}}/{{wishes.length}}</text>
     </view>
-    <van-progress percentage="{{progressPercent}}" color="#FFB6C1" track-color="#f0f0f0" stroke-width="8rpx" rounded />
+    <van-progress percentage="{{progressPercent}}" color="#FF6B9D" track-color="rgba(255,255,255,0.1)" stroke-width="8rpx" rounded />
   </view>
 
   <!-- Tab切换 -->
-  <van-tabs active="{{activeTab}}" bind:change="onTabChange" color="#FFB6C1">
+  <van-tabs active="{{activeTab}}" bind:change="onTabChange" color="#1A1A1A">
     <van-tab title="全部" name="all"></van-tab>
     <van-tab title="我的" name="my"></van-tab>
     <van-tab title="共同" name="shared"></van-tab>
@@ -20,7 +20,7 @@
   <scroll-view scroll-y class="wishes-list">
     <view class="wish-item {{item.isCompleted ? 'completed' : ''}}" wx:for="{{wishes}}" wx:key="_id">
       <view class="wish-checkbox" bindtap="toggleComplete" data-id="{{item._id}}">
-        <van-checkbox value="{{item.isCompleted}}" disabled="{{true}}" checked-color="#FFB6C1"/>
+        <van-checkbox value="{{item.isCompleted}}" disabled="{{true}}" checked-color="#FF6B9D"/>
       </view>
       <view class="wish-content">
         <text class="wish-title">{{item.title}}</text>
@@ -61,10 +61,10 @@
 
       <view class="share-option">
         <text>设为共同心愿</text>
-        <van-switch checked="{{newWish.isShared}}" bind:change="onShareChange" active-color="#FFB6C1"/>
+        <van-switch checked="{{newWish.isShared}}" bind:change="onShareChange" active-color="#FF6B9D"/>
       </view>
 
-      <van-button type="primary" block round bindtap="addWish">保存</van-button>
+      <van-button color="#1A1A1A" block round bindtap="addWish">保存</van-button>
     </view>
   </van-popup>
 </view>

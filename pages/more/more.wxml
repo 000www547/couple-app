@@ -1,5 +1,11 @@
 <!--pages/more/more.wxml-->
 <view class="container">
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <text class="header-title">更多功能</text>
+    <text class="header-subtitle">发现情侣互动新玩法</text>
+  </view>
+
   <!-- 功能入口网格 -->
   <view class="feature-grid">
     <view class="feature-card" bindtap="goToPoke">

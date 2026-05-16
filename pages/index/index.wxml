@@ -1,12 +1,17 @@
 <!--pages/index/index.wxml-->
 <view class="container">
-  <!-- 主卡片 - 可点击切换显示所有纪念日 -->
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <text class="header-title">YOUR SOULMATE</text>
+    <text class="header-subtitle">记录我们的每一天</text>
+  </view>
+
+  <!-- 主卡片 - 纪念日天数 -->
   <view class="hero-card" bindtap="togglePinnedType">
     <view class="hero-content" wx:if="{{pinnedAnniversary}}">
       <text class="hero-label">{{pinnedAnniversary.label}}</text>
       <text class="hero-number">{{pinnedAnniversary.days}}</text>
       <text class="hero-unit">{{pinnedAnniversary.unit}}</text>
-      <!-- 显示副标题（比如"我的生日"） -->
       <text class="hero-subtitle" wx:if="{{pinnedAnniversary.subtitle}}">{{pinnedAnniversary.subtitle}}</text>
     </view>
     <view class="hero-content hero-empty" wx:else>
@@ -14,53 +19,63 @@
       <text class="hero-number">0</text>
       <text class="hero-unit">天</text>
     </view>
-    <view class="hero-hint">
-      <text>点击切换 ({{currentPinnedIndex + 1}}/{{anniversaries.length}})</text>
+    <view class="hero-hint" wx:if="{{anniversaries.length > 1}}">
+      <text>{{currentPinnedIndex + 1}}/{{anniversaries.length}}</text>
     </view>
   </view>
 
-  <!-- 生日倒计时（次卡片） -->
-  <view class="sub-card mt-20" wx:if="{{birthdayCountdown > 0}}">
+  <!-- 统计卡片行 -->
+  <view class="stats-row">
+    <view class="stat-card">
+      <text class="stat-card-number">{{anniversaries.length}}</text>
+      <text class="stat-card-label">纪念日</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-card-number">{{birthdayCountdown > 0 ? birthdayCountdown : '--'}}</text>
+      <text class="stat-card-label">生日倒数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-card-number">Lv.1</text>
+      <text class="stat-card-label">亲密度</text>
+    </view>
+  </view>
+
+  <!-- 生日倒计时 -->
+  <view class="sub-card" wx:if="{{birthdayCountdown > 0}}">
+    <text class="sub-label">距离 TA 的生日</text>
     <view class="sub-content">
-      <text class="sub-label">距离 TA 的生日还有</text>
       <text class="sub-number">{{birthdayCountdown}}</text>
       <text class="sub-unit">天</text>
     </view>
   </view>
 
   <!-- 纪念日列表 -->
-  <view class="anniversary-section mt-30">
+  <view class="anniversary-section">
     <view class="section-header">
-      <text class="title">纪念日</text>
-      <van-button size="small" type="primary" round bindtap="showAddAnniversary">
-        添加
-      </van-button>
+      <text class="section-title">纪念日</text>
+      <view class="add-btn" bindtap="showAddAnniversary">
+        <van-icon name="plus" color="#fff" size="28rpx"/>
+      </view>
     </view>
 
     <view class="anniversary-list">
       <view class="anniversary-item" wx:for="{{anniversaries}}" wx:key="_id">
         <view class="anniversary-left">
           <text class="anniversary-title">{{item.title}}</text>
-          <!-- 显示是谁的生日 -->
-          <text class="anniversary-who" wx:if="{{item.type === 'birthday' && item.who}}">({{item.who}})</text>
+          <text class="anniversary-who" wx:if="{{item.type === 'birthday' && item.who}}">{{item.who}}</text>
           <text class="anniversary-date">{{item.date}}</text>
-          <van-tag type="primary" size="small" wx:if="{{item.isPartner}}">TA的</van-tag>
         </view>
         <view class="anniversary-right">
-          <!-- 生日类型：总是显示距离下次还有XX天 -->
-          <text class="countdown" wx:if="{{item.type === 'birthday'}}">距离下次还有 {{item.displayCountdown}}天</text>
-          <!-- 在一起类型：显示第XX天 -->
+          <text class="countdown" wx:if="{{item.type === 'birthday'}}">{{item.displayCountdown}} 天</text>
           <text class="countdown" wx:elif="{{item.type === 'start'}}">第 {{item.displayCountdown}} 天</text>
-          <!-- 自定义类型（未来）：显示还有XX天 -->
-          <text class="countdown" wx:elif="{{item.type === 'custom' && item.countdown >= 0}}">还有 {{item.displayCountdown}} 天</text>
-          <!-- 自定义类型（过去）：显示第XX天 -->
-          <text class="countdown" wx:elif="{{item.type === 'custom' && item.countdown < 0}}">第 {{item.displayCountdown}} 天</text>
-          <van-icon name="delete" class="delete-icon" bindtap="deleteAnniversary" data-id="{{item._id}}"/>
+          <text class="countdown" wx:elif="{{item.type === 'custom' && item.countdown >= 0}}">{{item.displayCountdown}} 天</text>
+          <text class="countdown past" wx:elif="{{item.type === 'custom' && item.countdown < 0}}">{{item.displayCountdown}} 天</text>
+          <van-icon name="delete-o" class="delete-icon" bindtap="deleteAnniversary" data-id="{{item._id}}"/>
         </view>
       </view>
 
       <view class="empty-tip" wx:if="{{anniversaries.length === 0}}">
-        <text>还没有纪念日，点击添加记录你们的甜蜜时刻~</text>
+        <text>还没有纪念日，点击 + 添加吧</text>
       </view>
     </view>
   </view>
@@ -82,16 +97,15 @@
         </view>
       </view>
 
-      <!-- 生日类型：输入是谁的生日 + 提示 -->
       <view wx:if="{{newAnniversary.type === 'birthday'}}">
         <view class="input-group">
           <input class="input" placeholder="这是谁的生日？（如：我的、TA的）" value="{{newAnniversary.who}}" bindinput="onWhoInput"/>
         </view>
-        <view class="input-tip">💡 请输入出生日期，系统会自动计算距离下次生日的天数</view>
+        <view class="input-tip">输入出生日期，自动计算距离下次生日的天数</view>
       </view>
 
       <view class="input-group" wx:if="{{newAnniversary.type === 'start'}}">
-        <input class="input" placeholder="输入纪念日名称（如：在一起的这一天）" value="{{newAnniversary.title}}" bindinput="onTitleInput"/>
+        <input class="input" placeholder="纪念日名称（如：在一起的这一天）" value="{{newAnniversary.title}}" bindinput="onTitleInput"/>
       </view>
 
       <view class="input-group" wx:if="{{newAnniversary.type === 'custom'}}">
@@ -99,27 +113,22 @@
       </view>
 
       <view class="input-group">
-        <!-- 生日和在一起限制不能超过今天 -->
         <picker mode="date" value="{{newAnniversary.date}}" bindchange="onDateChange" end="{{today}}" wx:if="{{newAnniversary.type === 'birthday' || newAnniversary.type === 'start'}}">
           <view class="picker">
             {{newAnniversary.date || '选择日期'}}
           </view>
         </picker>
-        <!-- 自定义可以选择任意日期 -->
         <picker mode="date" value="{{newAnniversary.date}}" bindchange="onDateChange" wx:elif="{{newAnniversary.type === 'custom'}}">
           <view class="picker">
             {{newAnniversary.date || '选择日期'}}
           </view>
         </picker>
-        <!-- 根据类型显示不同提示 -->
-        <view class="input-tip" wx:if="{{newAnniversary.type === 'start'}}">💡 请选择你们第一次在一起的日期</view>
-        <view class="input-tip" wx:elif="{{newAnniversary.type === 'birthday'}}">💡 请选择出生日期，系统会自动计算距离下一个生日的天数</view>
-        <view class="input-tip" wx:elif="{{newAnniversary.type === 'custom'}}">💡 选择未来日期可倒数，选择过去日期可记录已过去的天数</view>
+        <view class="input-tip" wx:if="{{newAnniversary.type === 'start'}}">请选择你们第一次在一起的日期</view>
+        <view class="input-tip" wx:elif="{{newAnniversary.type === 'birthday'}}">请选择出生日期</view>
+        <view class="input-tip" wx:elif="{{newAnniversary.type === 'custom'}}">未来日期可倒数，过去日期可记录已过去天数</view>
       </view>
 
-      <!-- 去掉无用的"设为首页置顶显示"开关 -->
-
-      <van-button type="primary" block round bindtap="saveAnniversary">保存</van-button>
+      <van-button type="primary" block round color="#1A1A1A" bindtap="saveAnniversary">保存</van-button>
     </view>
   </van-popup>
 </view>

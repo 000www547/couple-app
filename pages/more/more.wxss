@@ -1,26 +1,56 @@
 /* pages/more/more.wxss */
 .container {
   min-height: 100vh;
-  background: #FFF0F5;
+  background: #F5F5F7;
   padding: 40rpx 30rpx;
+}
+
+/* 页面标题 */
+.page-header {
+  margin-bottom: 30rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+.header-subtitle {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
 }
 
 /* 功能网格 */
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30rpx;
+  gap: 24rpx;
 }
 
 .feature-card {
-  background: #fff;
-  border-radius: 24rpx;
+  background: #1A1A1A;
+  border-radius: 28rpx;
   padding: 40rpx 20rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 4rpx 20rpx rgba(255, 182, 193, 0.15);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
   transition: transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 150rpx;
+  height: 150rpx;
+  background: radial-gradient(circle, rgba(255, 107, 157, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
 }
 
 .feature-card:active {
@@ -28,42 +58,49 @@
 }
 
 .feature-card.placeholder {
-  opacity: 0.6;
+  opacity: 0.5;
+  background: #2D2D2D;
 }
 
 .feature-icon-wrap {
-  width: 120rpx;
-  height: 120rpx;
+  width: 110rpx;
+  height: 110rpx;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 20rpx;
+  position: relative;
+  z-index: 1;
 }
 
 .feature-icon-wrap.poke {
-  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
-  box-shadow: 0 8rpx 24rpx rgba(255, 105, 180, 0.3);
+  background: linear-gradient(135deg, #FF6B9D, #FF8FB0);
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.3);
 }
 
 .feature-icon-wrap.placeholder-bg {
-  background: #f0f0f0;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .feature-icon {
-  font-size: 60rpx;
+  font-size: 56rpx;
 }
 
 .feature-name {
   font-size: 30rpx;
-  color: #333;
+  color: #fff;
   font-weight: 600;
   margin-bottom: 8rpx;
+  position: relative;
+  z-index: 1;
 }
 
 .feature-desc {
   font-size: 22rpx;
-  color: #999;
+  color: rgba(255, 255, 255, 0.5);
+  position: relative;
+  z-index: 1;
 }
 
 /* 提示 */
@@ -74,5 +111,5 @@
 
 .tip-text {
   font-size: 24rpx;
-  color: #ccc;
+  color: #bbb;
 }

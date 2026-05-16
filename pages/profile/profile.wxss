@@ -1,16 +1,33 @@
 /* pages/profile/profile.wxss */
+
+/* ==================== 用户信息卡片 - 深色 ==================== */
 .user-card {
-  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
-  border-radius: 20rpx;
+  background: #1A1A1A;
+  border-radius: 32rpx;
   padding: 50rpx 30rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.user-card::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 250rpx;
+  height: 250rpx;
+  background: radial-gradient(circle, rgba(255, 107, 157, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
 }
 
 .avatar-section {
   position: relative;
+  z-index: 1;
 }
 
 .avatar-btn {
@@ -24,47 +41,55 @@
 }
 
 .avatar-large {
-  width: 150rpx;
-  height: 150rpx;
+  width: 140rpx;
+  height: 140rpx;
   border-radius: 50%;
-  border: 4rpx solid #fff;
+  border: 4rpx solid rgba(255, 255, 255, 0.2);
 }
 
 .role-badge {
   position: absolute;
   bottom: 0;
   right: -10rpx;
-  background: #FFD700;
-  color: #333;
+  background: #FF6B9D;
+  color: #fff;
   font-size: 20rpx;
-  padding: 4rpx 12rpx;
+  padding: 4rpx 14rpx;
   border-radius: 20rpx;
+  font-weight: 500;
 }
 
 .nickname {
   font-size: 36rpx;
-  font-weight: bold;
-  margin: 20rpx 0;
+  font-weight: 600;
+  margin: 20rpx 0 10rpx;
+  position: relative;
+  z-index: 1;
 }
 
 .user-card van-button {
   margin-top: 10rpx;
+  position: relative;
+  z-index: 1;
 }
 
-.partner-section, .bind-section, .stats-section, .invite-section {
+/* ==================== 通用卡片样式 ==================== */
+.partner-section, .bind-section, .stats-section, .invite-section, .relationship-section {
   background: #fff;
-  border-radius: 20rpx;
+  border-radius: 24rpx;
   padding: 30rpx;
   margin-top: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
 }
 
 .section-title, .stats-title {
-  font-size: 28rpx;
-  color: #333;
-  font-weight: 500;
-  margin-bottom: 20rpx;
+  font-size: 30rpx;
+  color: #1A1A1A;
+  font-weight: 600;
+  margin-bottom: 24rpx;
 }
 
+/* ==================== 伴侣信息 ==================== */
 .partner-card {
   display: flex;
   align-items: center;
@@ -76,15 +101,19 @@
 
 .partner-name {
   font-size: 30rpx;
-  color: #333;
+  color: #1A1A1A;
+  font-weight: 600;
   display: block;
 }
 
 .partner-status {
   font-size: 24rpx;
-  color: #87CEEB;
+  color: #FF6B9D;
+  margin-top: 4rpx;
+  display: block;
 }
 
+/* ==================== 统计数据 ==================== */
 .stats-grid {
   display: flex;
   justify-content: space-around;
@@ -97,9 +126,9 @@
 }
 
 .stat-number {
-  font-size: 40rpx;
-  color: #FFB6C1;
-  font-weight: bold;
+  font-size: 44rpx;
+  color: #FF6B9D;
+  font-weight: 700;
 }
 
 .stat-label {
@@ -108,103 +137,58 @@
   margin-top: 10rpx;
 }
 
-.edit-modal, .bind-modal {
-  padding: 40rpx;
-}
-
-.modal-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 40rpx;
-}
-
-.bind-desc {
-  font-size: 24rpx;
-  color: #999;
-  text-align: center;
-  margin-bottom: 30rpx;
-}
-
-.input-group {
-  margin-bottom: 30rpx;
-}
-
-.input-label {
-  display: block;
-  font-size: 26rpx;
-  color: #666;
-  margin-bottom: 10rpx;
-}
-
-.input {
-  border: 1rpx solid #eee;
-  border-radius: 10rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
-}
-
-.picker {
-  border: 1rpx solid #eee;
-  border-radius: 10rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
-  color: #333;
-}
-
-/* 邀请码区域 */
+/* ==================== 邀请码区域 ==================== */
 .invite-section {
   margin-top: 20rpx;
 }
 
 .invite-card {
-  background: #fff;
-  border-radius: 20rpx;
-  padding: 30rpx;
+  background: #1A1A1A;
+  border-radius: 24rpx;
+  padding: 40rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #fff;
 }
 
 .invite-header {
   text-align: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
 }
 
 .invite-title {
   font-size: 28rpx;
-  color: #333;
-  font-weight: 500;
+  color: #fff;
+  font-weight: 600;
   display: block;
 }
 
 .invite-desc {
   font-size: 22rpx;
-  color: #999;
+  color: rgba(255, 255, 255, 0.5);
   margin-top: 8rpx;
   display: block;
 }
 
 .invite-code-box {
-  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
-  border-radius: 12rpx;
-  padding: 20rpx 40rpx;
-  margin-bottom: 20rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16rpx;
+  padding: 24rpx 60rpx;
+  margin-bottom: 24rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.1);
 }
 
 .invite-code {
-  font-size: 32rpx;
-  color: #fff;
-  font-weight: bold;
-  letter-spacing: 4rpx;
+  font-size: 40rpx;
+  color: #FF6B9D;
+  font-weight: 700;
+  letter-spacing: 8rpx;
 }
 
-/* 关系列表 */
+/* ==================== 关系列表 ==================== */
 .relationship-section {
   background: #fff;
-  border-radius: 20rpx;
-  padding: 30rpx;
-  margin-top: 20rpx;
 }
 
 .section-header-row {
@@ -252,7 +236,8 @@
 
 .relationship-name {
   font-size: 28rpx;
-  color: #333;
+  color: #1A1A1A;
+  font-weight: 500;
   display: block;
 }
 
@@ -260,32 +245,81 @@
   margin-top: 8rpx;
 }
 
-/* 关系类型选择 */
+/* ==================== 关系类型选择 ==================== */
 .relation-type-group {
   display: flex;
   justify-content: space-between;
   margin-bottom: 30rpx;
+  gap: 12rpx;
 }
 
 .relation-type-btn {
   flex: 1;
   text-align: center;
   padding: 16rpx 0;
-  margin: 0 6rpx;
-  border: 1rpx solid #eee;
-  border-radius: 30rpx;
+  border: 2rpx solid #EEEEEE;
+  border-radius: 16rpx;
   font-size: 24rpx;
   color: #666;
-  background: #fff;
+  background: #F8F8F8;
 }
 
 .relation-type-btn.active {
-  background: #FFB6C1;
+  background: #1A1A1A;
   color: #fff;
-  border-color: #FFB6C1;
+  border-color: #1A1A1A;
 }
 
-/* 解除关系弹窗 */
+/* ==================== 弹窗样式 ==================== */
+.edit-modal, .bind-modal {
+  padding: 40rpx;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 40rpx;
+  color: #1A1A1A;
+}
+
+.bind-desc {
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.input-group {
+  margin-bottom: 30rpx;
+}
+
+.input-label {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.input {
+  background: #F8F8F8;
+  border: 2rpx solid #EEEEEE;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: #1A1A1A;
+}
+
+.picker {
+  background: #F8F8F8;
+  border: 2rpx solid #EEEEEE;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: #1A1A1A;
+}
+
+/* ==================== 解除关系弹窗 ==================== */
 .unbind-modal {
   padding: 40rpx;
 }
@@ -305,7 +339,7 @@
 .unbind-warning {
   background: #fff2f0;
   padding: 20rpx;
-  border-radius: 10rpx;
+  border-radius: 16rpx;
   margin-bottom: 30rpx;
   text-align: center;
 }
