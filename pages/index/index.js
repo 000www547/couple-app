@@ -6,7 +6,7 @@ Page({
     userInfo: null,
     daysTogether: 0,
     partnerBirthday: null,
-    birthdayCountdown: 0,
+    birthdayCountdown: -1, // -1 表示没有生日记录，0 表示生日就在今天
     anniversaries: [],
     showAddModal: false,
     currentPinnedLabel: '在一起的第',
@@ -193,14 +193,14 @@ Page({
 
         // 找到第一个生日类型作为生日倒计时显示
         const birthdayAnniversary = anniversaries.find(a => a.type === 'birthday');
-        const birthdayCountdown = birthdayAnniversary ? birthdayAnniversary.countdown : 0;
+        const birthdayCountdown = birthdayAnniversary ? birthdayAnniversary.countdown : -1;
 
         // 如果没有纪念日，立即清空首页主卡片，防止旧数据残留
         if (anniversaries.length === 0) {
           that.setData({
             anniversaries: [],
             currentPinnedIndex: 0,
-            birthdayCountdown: 0,
+            birthdayCountdown: -1,
             pinnedAnniversary: null,
             currentPinnedLabel: '添加你们的第一个纪念日'
           });
