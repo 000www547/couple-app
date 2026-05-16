@@ -9,12 +9,15 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
   const { action } = event;
+  console.log('[heartbeat] 收到请求, action:', action, 'openid:', openid);
 
   try {
     switch (action) {
       case 'send': {
+        console.log('[heartbeat] send: 开始查询用户', openid);
         // 发送心跳/戳一戳，必须先有绑定伴侣
         const userRes = await db.collection('users').where({ _openid: openid }).get();
+        console.log('[heartbeat] send: 用户查询结果', userRes.data?.length);
         if (!userRes.data || userRes.data.length === 0) {
           return { success: false, error: '用户不存在' };
         }
@@ -26,6 +29,7 @@ exports.main = async (event, context) => {
           if (active) partnerId = active.partnerId;
         }
         if (!partnerId) partnerId = user.activeRelationship || null;
+        console.log('[heartbeat] send: partnerId:', partnerId);
         if (!partnerId) {
           return { success: false, error: '请先绑定伴侣' };
         }
@@ -39,6 +43,7 @@ exports.main = async (event, context) => {
           isRead: false
         };
 
+        console.log('[heartbeat] send: 开始并行写入');
         await Promise.all([
           db.collection('heartbeats').add({ data: heartbeat }),
           db.collection('users').where({ _openid: openid }).update({
@@ -48,6 +53,7 @@ exports.main = async (event, context) => {
             data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
           })
         ]);
+        console.log('[heartbeat] send: 完成');
 
         return { success: true };
       }
