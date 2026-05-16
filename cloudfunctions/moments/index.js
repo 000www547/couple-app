@@ -29,8 +29,19 @@ exports.main = async (event, context) => {
       case 'getList': {
         // 获取动态列表 - 仅显示自己和伴侣的动态
         let userIds = [openid];
-        const partnerId = await getPartnerId(openid);
-        if (partnerId) userIds.push(partnerId);
+
+        // 内联获取伴侣ID，不依赖外部函数
+        const partnerRes = await db.collection('users').where({ _openid: openid }).get();
+        if (partnerRes.data && partnerRes.data.length > 0) {
+          const u = partnerRes.data[0];
+          let pid = null;
+          if (u.relationships && u.relationships.length > 0) {
+            const active = u.relationships.find(r => r.status === 'active');
+            if (active) pid = active.partnerId;
+          }
+          if (!pid) pid = u.activeRelationship || null;
+          if (pid) userIds.push(pid);
+        }
 
         const listResult = await db.collection('moments')
           .where({ userId: _.in(userIds) })
@@ -38,40 +49,38 @@ exports.main = async (event, context) => {
           .limit(50)
           .get();
 
-        // 获取用户信息
+        // 批量获取用户信息，避免循环DB调用
         const uniqueUserIds = [...new Set(listResult.data.map(m => m.userId))];
+        const userInfosRes = await db.collection('users')
+          .where({ _openid: _.in(uniqueUserIds) })
+          .get();
         const userInfos = {};
-        for (const uid of uniqueUserIds) {
-          const u = await db.collection('users').where({ _openid: uid }).get();
-          if (u.data && u.data.length > 0) userInfos[uid] = u.data[0];
-        }
+        userInfosRes.data.forEach(u => { userInfos[u._openid] = u; });
         return { success: true, moments: listResult.data, userInfos };
       }
 
       case 'like': {
         // 点赞/取消点赞
-        const moment = await db.collection('moments').doc(event.momentId).get();
-        if (!moment.data) return { success: false, error: '动态不存在' };
+        const momentRes = await db.collection('moments').doc(event.momentId).get();
+        if (!momentRes.data) return { success: false, error: '动态不存在' };
 
-        const momentOwner = moment.data.userId;
-        const likedBy = moment.data.likedBy || [];
+        const momentOwner = momentRes.data.userId;
+        const likedBy = momentRes.data.likedBy || [];
         const isLiked = likedBy.includes(openid);
 
         if (isLiked) {
-          // 取消点赞
           await db.collection('moments').doc(event.momentId).update({
             data: { likes: _.inc(-1), likedBy: _.pull(openid) }
           });
         } else {
-          // 点赞
           await db.collection('moments').doc(event.momentId).update({
             data: { likes: _.inc(1), likedBy: _.push(openid) }
           });
-          // 非本人点赞 且 互为伴侣 时才增加亲密度（双方各+1）
+          // 非本人点赞 且 互为伴侣 时才增加亲密度（双方各+1，并行更新）
           if (openid !== momentOwner) {
-            const userA = await db.collection('users').where({ _openid: openid }).get();
-            if (userA.data && userA.data.length > 0) {
-              const u = userA.data[0];
+            const userRes = await db.collection('users').where({ _openid: openid }).get();
+            if (userRes.data && userRes.data.length > 0) {
+              const u = userRes.data[0];
               let partnerOfA = null;
               if (u.relationships && u.relationships.length > 0) {
                 const active = u.relationships.find(r => r.status === 'active');
@@ -80,12 +89,14 @@ exports.main = async (event, context) => {
               if (!partnerOfA) partnerOfA = u.activeRelationship || null;
 
               if (partnerOfA === momentOwner) {
-                await db.collection('users').where({ _openid: openid }).update({
-                  data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
-                });
-                await db.collection('users').where({ _openid: momentOwner }).update({
-                  data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
-                });
+                await Promise.all([
+                  db.collection('users').where({ _openid: openid }).update({
+                    data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
+                  }),
+                  db.collection('users').where({ _openid: momentOwner }).update({
+                    data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
+                  })
+                ]);
               }
             }
           }
@@ -104,10 +115,10 @@ exports.main = async (event, context) => {
 
       case 'addComment': {
         // 添加评论
-        const targetMoment = await db.collection('moments').doc(event.momentId).get();
-        if (!targetMoment.data) return { success: false, error: '动态不存在' };
+        const targetMomentRes = await db.collection('moments').doc(event.momentId).get();
+        if (!targetMomentRes.data) return { success: false, error: '动态不存在' };
 
-        const momentOwner = targetMoment.data.userId;
+        const momentOwner = targetMomentRes.data.userId;
         const newComment = {
           momentId: event.momentId,
           userId: openid,
@@ -118,12 +129,11 @@ exports.main = async (event, context) => {
         };
         await db.collection('comments').add({ data: newComment });
 
-        // 非本人评论 且 互为伴侣 时才增加亲密度（双方各+1）
-        // 优化：只查一次 A 的数据
+        // 非本人评论 且 互为伴侣 时才增加亲密度（双方各+1，并行更新）
         if (openid !== momentOwner) {
-          const userA = await db.collection('users').where({ _openid: openid }).get();
-          if (userA.data && userA.data.length > 0) {
-            const u = userA.data[0];
+          const userRes = await db.collection('users').where({ _openid: openid }).get();
+          if (userRes.data && userRes.data.length > 0) {
+            const u = userRes.data[0];
             let partnerOfA = null;
             if (u.relationships && u.relationships.length > 0) {
               const active = u.relationships.find(r => r.status === 'active');
@@ -132,12 +142,14 @@ exports.main = async (event, context) => {
             if (!partnerOfA) partnerOfA = u.activeRelationship || null;
 
             if (partnerOfA === momentOwner) {
-              await db.collection('users').where({ _openid: openid }).update({
-                data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
-              });
-              await db.collection('users').where({ _openid: momentOwner }).update({
-                data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
-              });
+              await Promise.all([
+                db.collection('users').where({ _openid: openid }).update({
+                  data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
+                }),
+                db.collection('users').where({ _openid: momentOwner }).update({
+                  data: { intimacy: _.inc(1), lastIntimacyUpdate: db.serverDate() }
+                })
+              ]);
             }
           }
         }
@@ -150,12 +162,13 @@ exports.main = async (event, context) => {
           .orderBy('createTime', 'asc')
           .get();
 
+        // 批量获取用户信息，避免循环DB调用
         const commentUniqueUserIds = [...new Set(commentsResult.data.map(c => c.userId))];
+        const commentUserInfosRes = await db.collection('users')
+          .where({ _openid: _.in(commentUniqueUserIds) })
+          .get();
         const commentUserInfos = {};
-        for (const uid of commentUniqueUserIds) {
-          const u = await db.collection('users').where({ _openid: uid }).get();
-          if (u.data && u.data.length > 0) commentUserInfos[uid] = u.data[0];
-        }
+        commentUserInfosRes.data.forEach(u => { commentUserInfos[u._openid] = u; });
         return { success: true, comments: commentsResult.data, commentUserInfos };
       }
 

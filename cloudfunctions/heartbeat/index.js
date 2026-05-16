@@ -14,7 +14,6 @@ exports.main = async (event, context) => {
     switch (action) {
       case 'send': {
         // 发送心跳/戳一戳，必须先有绑定伴侣
-        // 只做一次用户查询，内联获取伴侣ID并校验双向关系
         const userRes = await db.collection('users').where({ _openid: openid }).get();
         if (!userRes.data || userRes.data.length === 0) {
           return { success: false, error: '用户不存在' };
@@ -31,7 +30,7 @@ exports.main = async (event, context) => {
           return { success: false, error: '请先绑定伴侣' };
         }
 
-        // 记录心跳（第2次DB调用）
+        // 记录心跳 + 双方各+2亲密度（并行执行，减少总耗时）
         const heartbeat = {
           userId: openid,
           partnerId: partnerId,
@@ -39,33 +38,18 @@ exports.main = async (event, context) => {
           createTime: db.serverDate(),
           isRead: false
         };
-        const addResult = await db.collection('heartbeats').add({ data: heartbeat });
 
-        // 校验双向绑定关系（第3次DB调用：查伴侣的relationships）
-        const partnerRes = await db.collection('users').where({ _openid: partnerId }).get();
-        if (partnerRes.data && partnerRes.data.length > 0) {
-          const partner = partnerRes.data[0];
-          let partnerPartnerId = null;
-          if (partner.relationships && partner.relationships.length > 0) {
-            const active = partner.relationships.find(r => r.status === 'active');
-            if (active) partnerPartnerId = active.partnerId;
-          }
-          if (!partnerPartnerId) partnerPartnerId = partner.activeRelationship || null;
+        await Promise.all([
+          db.collection('heartbeats').add({ data: heartbeat }),
+          db.collection('users').where({ _openid: openid }).update({
+            data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
+          }),
+          db.collection('users').where({ _openid: partnerId }).update({
+            data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
+          })
+        ]);
 
-          if (partnerPartnerId === openid) {
-            // 双方互为伴侣，各+2（第4、5次DB调用，并行执行）
-            await Promise.all([
-              db.collection('users').where({ _openid: openid }).update({
-                data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
-              }),
-              db.collection('users').where({ _openid: partnerId }).update({
-                data: { intimacy: _.inc(2), lastIntimacyUpdate: db.serverDate() }
-              })
-            ]);
-          }
-        }
-
-        return { success: true, id: addResult._id };
+        return { success: true };
       }
 
       case 'getList': {
@@ -91,13 +75,13 @@ exports.main = async (event, context) => {
           .limit(50)
           .get();
 
-        // 获取用户信息
+        // 获取用户信息（批量查询，避免循环DB调用）
         const uniqueUserIds = [...new Set(listResult.data.map(h => h.userId))];
+        const userInfosRes = await db.collection('users')
+          .where({ _openid: _.in(uniqueUserIds) })
+          .get();
         const userInfos = {};
-        for (const uid of uniqueUserIds) {
-          const u = await db.collection('users').where({ _openid: uid }).get();
-          if (u.data && u.data.length > 0) userInfos[uid] = u.data[0];
-        }
+        userInfosRes.data.forEach(u => { userInfos[u._openid] = u; });
         return { success: true, heartbeats: listResult.data, userInfos };
       }
 
