@@ -3,7 +3,9 @@
     "pages/index/index",
     "pages/moments/moments",
     "pages/wishes/wishes",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/more/more",
+    "pages/more/poke/poke"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -31,7 +33,7 @@
       },
       {
         "pagePath": "pages/wishes/wishes",
-        "text": "心愿清单",
+        "text": "愿望清单",
         "iconPath": "assets/icons/star.png",
         "selectedIconPath": "assets/icons/star-active.png"
       },
@@ -40,6 +42,12 @@
         "text": "我的",
         "iconPath": "assets/icons/user.png",
         "selectedIconPath": "assets/icons/user-active.png"
+      },
+      {
+        "pagePath": "pages/more/more",
+        "text": "更多",
+        "iconPath": "assets/icons/more.png",
+        "selectedIconPath": "assets/icons/more-active.png"
       }
     ]
   },

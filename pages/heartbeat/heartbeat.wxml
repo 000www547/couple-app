@@ -1,0 +1,56 @@
+<!--pages/heartbeat/heartbeat.wxml-->
+<view class="container">
+  <!-- 发送心跳区域 -->
+  <view class="send-section">
+    <view class="heart-container">
+      <view class="heart-icon {{isSending ? 'sending' : ''}}" bindlongpress="sendHeartbeat" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
+        <text class="heart-emoji">💗</text>
+      </view>
+      <text class="send-hint">{{holdTime < 1000 ? '长按发送心跳' : '发送中...'}}</text>
+    </view>
+  </view>
+
+  <!-- 发送选项 -->
+  <view class="type-section">
+    <view class="type-btn {{heartType === 'heartbeat' ? 'active' : ''}}" bindtap="setHeartType" data-type="heartbeat">
+      <text class="type-icon">💗</text>
+      <text class="type-text">心跳</text>
+    </view>
+    <view class="type-btn {{heartType === 'poke' ? 'active' : ''}}" bindtap="setHeartType" data-type="poke">
+      <text class="type-icon">👆</text>
+      <text class="type-text">戳一戳</text>
+    </view>
+  </view>
+
+  <!-- 心动记录 -->
+  <view class="history-section">
+    <view class="section-header">
+      <text class="section-title">心动记录</text>
+      <text class="section-count" wx:if="{{unreadCount > 0}}">{{unreadCount}}条未读</text>
+    </view>
+
+    <scroll-view scroll-y class="heartbeat-list">
+      <view class="heartbeat-item {{!item.isRead ? 'unread' : ''}}" wx:for="{{heartbeats}}" wx:key="_id">
+        <view class="heartbeat-left">
+          <image class="heartbeat-avatar" src="{{userInfos[item.userId].avatar || '/assets/icons/user.png'}}"/>
+          <view class="heartbeat-info">
+            <text class="heartbeat-user">{{userInfos[item.userId].nickname || '匿名用户'}}</text>
+            <text class="heartbeat-type">{{item.type === 'poke' ? '戳了你一下 👆' : '送了一颗心跳 💗'}}</text>
+          </view>
+        </view>
+        <view class="heartbeat-right">
+          <text class="heartbeat-time">{{item.createTime}}</text>
+          <view class="unread-dot" wx:if="{{!item.isRead}}"></view>
+        </view>
+      </view>
+
+      <view class="empty-tip" wx:if="{{heartbeats.length === 0 && !loading}}">
+        <text>还没有心动记录，快发送第一颗心跳吧~</text>
+      </view>
+
+      <view class="loading-tip" wx:if="{{loading}}">
+        <text>加载中...</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

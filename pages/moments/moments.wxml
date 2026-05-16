@@ -25,11 +25,46 @@
         </view>
       </view>
 
-      <!-- 点赞 -->
+      <!-- 点赞和评论按钮 -->
       <view class="moment-footer">
-        <view class="like-btn" bindtap="likeMoment" data-id="{{item._id}}">
+        <view class="action-btn" bindtap="likeMoment" data-id="{{item._id}}">
           <van-icon name="like" color="{{item.likedBy && item.likedBy.indexOf(currentUser._openid) > -1 ? '#FFB6C1' : '#999'}}"/>
           <text class="like-count">{{item.likes || 0}}</text>
+        </view>
+        <view class="action-btn" bindtap="toggleComments" data-id="{{item._id}}" data-index="{{index}}">
+          <van-icon name="chat-o" color="{{item.showComments ? '#FFB6C1' : '#999'}}"/>
+          <text class="comment-count">{{item.comments.length || 0}}</text>
+        </view>
+      </view>
+
+      <!-- 评论区域 -->
+      <view class="comments-section" wx:if="{{item.showComments}}">
+        <!-- 评论列表 -->
+        <view class="comments-list" wx:if="{{item.comments && item.comments.length > 0}}">
+          <view class="comment-item" wx:for="{{item.comments}}" wx:for-item="comment" wx:key="_id">
+            <view class="comment-main">
+              <image class="comment-avatar" src="{{item.commentUserInfos[comment.userId].avatar || '/assets/icons/user.png'}}"/>
+              <view class="comment-body">
+                <text class="comment-user">{{item.commentUserInfos[comment.userId].nickname || '匿名用户'}}</text>
+                <text class="comment-reply" wx:if="{{comment.replyTo}}"> 回复 @{{item.commentUserInfos[comment.replyToUserId].nickname || '匿名用户'}}</text>
+                <text class="comment-content">{{comment.content}}</text>
+              </view>
+            </view>
+            <view class="comment-actions">
+              <text class="comment-time">{{comment.createTime}}</text>
+              <text class="reply-btn" bindtap="showReplyInput" data-momentid="{{item._id}}" data-commentid="{{comment._id}}" data-userid="{{comment.userId}}" data-index="{{index}}">回复</text>
+              <van-icon name="delete" class="comment-delete" wx:if="{{comment.userId === currentUser._openid}}" bindtap="deleteComment" data-commentid="{{comment._id}}" data-momentid="{{item._id}}"/>
+            </view>
+          </view>
+        </view>
+        <view class="no-comments" wx:else>
+          <text>还没有评论，快来抢沙发~</text>
+        </view>
+
+        <!-- 评论输入框 -->
+        <view class="comment-input-area">
+          <input class="comment-input" placeholder="{{replyingTo ? '回复 @' + replyingTo : '写评论...'}}" value="{{commentInputs[item._id]}}" bindinput="onCommentInput" data-momentid="{{item._id}}"/>
+          <van-button size="small" type="primary" round bindtap="submitComment" data-momentid="{{item._id}}">发送</van-button>
         </view>
       </view>
     </view>

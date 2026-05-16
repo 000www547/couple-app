@@ -1,0 +1,27 @@
+<!--pages/more/more.wxml-->
+<view class="container">
+  <!-- 功能入口网格 -->
+  <view class="feature-grid">
+    <view class="feature-card" bindtap="goToPoke">
+      <view class="feature-icon-wrap poke">
+        <text class="feature-icon">💗</text>
+      </view>
+      <text class="feature-name">戳一戳</text>
+      <text class="feature-desc">长按发送心跳</text>
+    </view>
+
+    <!-- 预留更多功能入口 -->
+    <view class="feature-card placeholder">
+      <view class="feature-icon-wrap placeholder-bg">
+        <text class="feature-icon">✨</text>
+      </view>
+      <text class="feature-name">敬请期待</text>
+      <text class="feature-desc">更多功能开发中</text>
+    </view>
+  </view>
+
+  <!-- 小提示 -->
+  <view class="tip-section">
+    <text class="tip-text">这里会陆续添加更多情侣互动小功能哦~</text>
+  </view>
+</view>

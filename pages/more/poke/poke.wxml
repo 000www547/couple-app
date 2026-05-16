@@ -1,0 +1,57 @@
+<!--pages/more/poke/poke.wxml-->
+<view class="container">
+  <!-- 顶部标题区 -->
+  <view class="header">
+    <text class="header-title">戳一戳 {{partnerName}}</text>
+  </view>
+
+  <!-- 发送区域 -->
+  <view class="send-section">
+    <text class="send-tip">长按1秒发送一个心跳 ❤️</text>
+
+    <view class="heart-btn-wrap">
+      <view
+        class="heart-btn {{isPressing ? 'pressing' : ''}} {{isSending ? 'sending' : ''}}"
+        bindtouchstart="onTouchStart"
+        bindtouchend="onTouchEnd"
+        bindtouchcancel="onTouchEnd"
+      >
+        <view class="heart-inner">
+          <text class="heart-icon">❤️</text>
+        </view>
+      </view>
+    </view>
+
+    <text class="hold-text">{{holdText}}</text>
+
+    <!-- 进度环 -->
+    <view class="progress-ring" wx:if="{{isPressing && !isSending}}">
+      <view class="progress-bar" style="width: {{progress}}%"></view>
+    </view>
+  </view>
+
+  <!-- 最近记录 -->
+  <view class="history-section">
+    <text class="history-title">最近记录</text>
+
+    <scroll-view scroll-y class="history-list">
+      <block wx:if="{{heartbeats.length > 0}}">
+        <view class="history-item" wx:for="{{heartbeats}}" wx:key="_id">
+          <view class="history-left">
+            <view class="me-tag">我</view>
+            <text class="history-text">你戳了 {{partnerName}} ❤️</text>
+          </view>
+          <text class="history-time">{{item.timeAgo}}</text>
+        </view>
+      </block>
+
+      <view class="empty-tip" wx:if="{{heartbeats.length === 0 && !loading}}">
+        <text>还没有记录，快戳一下TA吧~</text>
+      </view>
+
+      <view class="loading-tip" wx:if="{{loading}}">
+        <text>加载中...</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

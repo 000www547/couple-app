@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "openapi": []
+  },
+  "desc": "心跳/戳一戳云函数",
+  "supportsAsync": true,
+  "timeout": 30
+}

@@ -12,6 +12,7 @@ Page({
     currentPinnedLabel: '在一起的第',
     pinnedAnniversary: null,
     currentPinnedIndex: 0, // 当前首页显示第几个纪念日
+    today: '', // 今天日期，用于日期选择限制
     newAnniversary: {
       title: '',
       date: '',
@@ -22,6 +23,10 @@ Page({
   },
 
   onShow: function() {
+    // 设置今天的日期用于日期选择限制
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    this.setData({ today: today });
     this.login();
   },
 

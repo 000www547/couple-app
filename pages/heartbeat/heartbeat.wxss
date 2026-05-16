@@ -1,0 +1,199 @@
+/* pages/heartbeat/heartbeat.wxss */
+.container {
+  min-height: 100vh;
+  background: #fafafa;
+  padding-bottom: 120rpx;
+}
+
+/* 发送心跳区域 */
+.send-section {
+  background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%);
+  padding: 80rpx 40rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heart-icon {
+  width: 200rpx;
+  height: 200rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s;
+}
+
+.heart-icon.sending {
+  transform: scale(1.1);
+  animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.heart-emoji {
+  font-size: 100rpx;
+}
+
+.send-hint {
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #fff;
+  opacity: 0.9;
+}
+
+/* 发送选项 */
+.type-section {
+  display: flex;
+  justify-content: center;
+  gap: 40rpx;
+  padding: 40rpx;
+  background: #fff;
+  margin-bottom: 20rpx;
+}
+
+.type-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 50rpx;
+  border-radius: 20rpx;
+  background: #f5f5f5;
+  transition: all 0.3s;
+}
+
+.type-btn.active {
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  color: #fff;
+}
+
+.type-icon {
+  font-size: 50rpx;
+  margin-bottom: 10rpx;
+}
+
+.type-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.type-btn.active .type-text {
+  color: #fff;
+}
+
+/* 心动记录 */
+.history-section {
+  background: #fff;
+  padding: 30rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.section-count {
+  font-size: 24rpx;
+  color: #FF69B4;
+  background: rgba(255, 105, 180, 0.1);
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.heartbeat-list {
+  max-height: 60vh;
+}
+
+.heartbeat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.heartbeat-item:last-child {
+  border-bottom: none;
+}
+
+.heartbeat-item.unread {
+  background: rgba(255, 105, 180, 0.05);
+  margin: 0 -30rpx;
+  padding: 25rpx 30rpx;
+  border-radius: 10rpx;
+}
+
+.heartbeat-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.heartbeat-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.heartbeat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.heartbeat-user {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.heartbeat-type {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+
+.heartbeat-right {
+  display: flex;
+  align-items: center;
+}
+
+.heartbeat-time {
+  font-size: 22rpx;
+  color: #999;
+  margin-right: 15rpx;
+}
+
+.unread-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background: #FF69B4;
+  border-radius: 50%;
+}
+
+.empty-tip, .loading-tip {
+  text-align: center;
+  padding: 60rpx;
+  color: #999;
+  font-size: 26rpx;
+}

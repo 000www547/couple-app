@@ -11,7 +11,10 @@ Page({
       content: '',
       images: []
     },
-    loading: false
+    loading: false,
+    commentInputs: {}, // 每条动态的评论输入
+    replyingTo: null, // 当前回复的对象
+    replyingToCommentId: null // 回复的评论ID
   },
 
   onShow: function() {
@@ -36,21 +39,59 @@ Page({
 
   loadMoments: function() {
     this.setData({ loading: true });
-    
+
     wx.cloud.callFunction({
       name: 'moments',
       data: { action: 'getList' }
     }).then(res => {
       this.setData({ loading: false });
       if (res.result.success) {
+        // 为每条动态初始化评论相关字段
+        const moments = res.result.moments.map(m => ({
+          ...m,
+          showComments: false,
+          comments: [],
+          commentUserInfos: {}
+        }));
+
         this.setData({
-          moments: res.result.moments,
+          moments: moments,
           userInfos: res.result.userInfos
         });
+
+        // 加载每条动态的评论
+        this.loadAllComments();
       }
     }).catch(err => {
       this.setData({ loading: false });
       console.error('加载失败', err);
+    });
+  },
+
+  // 加载所有动态的评论
+  loadAllComments: function() {
+    const moments = this.data.moments;
+    const promises = moments.map((moment, index) => {
+      return wx.cloud.callFunction({
+        name: 'moments',
+        data: {
+          action: 'getComments',
+          momentId: moment._id
+        }
+      }).then(res => {
+        if (res.result.success) {
+          const updatedMoments = this.data.moments;
+          updatedMoments[index].comments = res.result.comments;
+          updatedMoments[index].commentUserInfos = res.result.commentUserInfos || {};
+          this.setData({ moments: updatedMoments });
+        }
+      }).catch(err => {
+        console.error('加载评论失败', err);
+      });
+    });
+
+    Promise.all(promises).catch(err => {
+      console.error('批量加载评论失败', err);
     });
   },
 
@@ -221,6 +262,140 @@ Page({
     wx.previewImage({
       current: url,
       urls: [url]
+    });
+  },
+
+  // 切换评论显示/隐藏
+  toggleComments: function(e) {
+    const momentId = e.currentTarget.dataset.id;
+    const index = e.currentTarget.dataset.index;
+    const moments = this.data.moments;
+
+    moments[index].showComments = !moments[index].showComments;
+
+    // 关闭回复状态
+    this.setData({
+      moments: moments,
+      replyingTo: null,
+      replyingToCommentId: null
+    });
+  },
+
+  // 显示回复输入框
+  showReplyInput: function(e) {
+    const momentId = e.currentTarget.dataset.momentid;
+    const commentId = e.currentTarget.dataset.commentid;
+    const userId = e.currentTarget.dataset.userid;
+    const index = e.currentTarget.dataset.index;
+    const moments = this.data.moments;
+    const commentUserInfos = moments[index].commentUserInfos;
+
+    const replyToNickname = commentUserInfos[userId]?.nickname || '匿名用户';
+
+    this.setData({
+      replyingTo: replyToNickname,
+      replyingToCommentId: commentId
+    });
+  },
+
+  // 评论输入
+  onCommentInput: function(e) {
+    const momentId = e.currentTarget.dataset.momentid;
+    const value = e.detail.value;
+    const commentInputs = this.data.commentInputs;
+    commentInputs[momentId] = value;
+    this.setData({ commentInputs: commentInputs });
+  },
+
+  // 提交评论
+  submitComment: function(e) {
+    const momentId = e.currentTarget.dataset.momentid;
+    const content = this.data.commentInputs[momentId];
+
+    if (!content || !content.trim()) {
+      wx.showToast({ title: '请输入评论内容', icon: 'none' });
+      return;
+    }
+
+    wx.showLoading({ title: '发送中...' });
+
+    const data = {
+      action: 'addComment',
+      momentId: momentId,
+      content: content.trim()
+    };
+
+    // 如果是回复
+    if (this.data.replyingToCommentId) {
+      data.replyTo = this.data.replyingToCommentId;
+      data.replyToUserId = this.getReplyToUserId(momentId);
+    }
+
+    wx.cloud.callFunction({
+      name: 'moments',
+      data: data
+    }).then(res => {
+      wx.hideLoading();
+      if (res.result.success) {
+        wx.showToast({ title: '评论成功' });
+
+        // 清空输入
+        const commentInputs = this.data.commentInputs;
+        commentInputs[momentId] = '';
+        this.setData({
+          commentInputs: commentInputs,
+          replyingTo: null,
+          replyingToCommentId: null
+        });
+
+        // 重新加载评论
+        this.loadAllComments();
+      } else {
+        wx.showToast({ title: '评论失败', icon: 'none' });
+      }
+    }).catch(err => {
+      wx.hideLoading();
+      console.error('评论失败', err);
+      wx.showToast({ title: '评论失败', icon: 'none' });
+    });
+  },
+
+  // 获取回复目标用户的ID
+  getReplyToUserId: function(momentId) {
+    const moments = this.data.moments;
+    const moment = moments.find(m => m._id === momentId);
+    if (moment && moment.comments) {
+      const comment = moment.comments.find(c => c._id === this.data.replyingToCommentId);
+      return comment?.userId || null;
+    }
+    return null;
+  },
+
+  // 删除评论
+  deleteComment: function(e) {
+    const commentId = e.currentTarget.dataset.commentid;
+    const momentId = e.currentTarget.dataset.momentid;
+    const that = this;
+
+    wx.showModal({
+      title: '确认删除',
+      content: '确定要删除这条评论吗？',
+      success: function(res) {
+        if (res.confirm) {
+          wx.cloud.callFunction({
+            name: 'moments',
+            data: {
+              action: 'deleteComment',
+              commentId: commentId
+            }
+          }).then(res => {
+            if (res.result.success) {
+              wx.showToast({ title: '已删除' });
+              that.loadAllComments();
+            }
+          });
+        }
+      }
     });
   }
 });

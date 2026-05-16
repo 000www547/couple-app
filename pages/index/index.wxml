@@ -99,7 +99,14 @@
       </view>
 
       <view class="input-group">
-        <picker mode="date" value="{{newAnniversary.date}}" bindchange="onDateChange">
+        <!-- 生日和在一起限制不能超过今天 -->
+        <picker mode="date" value="{{newAnniversary.date}}" bindchange="onDateChange" end="{{today}}" wx:if="{{newAnniversary.type === 'birthday' || newAnniversary.type === 'start'}}">
+          <view class="picker">
+            {{newAnniversary.date || '选择日期'}}
+          </view>
+        </picker>
+        <!-- 自定义可以选择任意日期 -->
+        <picker mode="date" value="{{newAnniversary.date}}" bindchange="onDateChange" wx:elif="{{newAnniversary.type === 'custom'}}">
           <view class="picker">
             {{newAnniversary.date || '选择日期'}}
           </view>

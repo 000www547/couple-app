@@ -130,6 +130,70 @@ exports.main = async (event, context) => {
           success: true
         };
 
+      case 'addComment':
+        // 添加评论
+        const newComment = {
+          momentId: event.momentId,
+          userId: openid,
+          content: event.content || '',
+          replyTo: event.replyTo || null,
+          replyToUserId: event.replyToUserId || null,
+          createTime: db.serverDate()
+        };
+
+        await db.collection('comments').add({
+          data: newComment
+        });
+
+        return {
+          success: true
+        };
+
+      case 'getComments':
+        // 获取某动态的所有评论
+        const commentsResult = await db.collection('comments')
+          .where({
+            momentId: event.momentId
+          })
+          .orderBy('createTime', 'asc')
+          .get();
+
+        // 获取评论者信息
+        const commentUniqueUserIds = [...new Set(commentsResult.data.map(c => c.userId))];
+        const commentUserInfos = {};
+
+        if (commentUniqueUserIds.length > 0) {
+          for (const userId of commentUniqueUserIds) {
+            const user = await db.collection('users').where({
+              _openid: userId
+            }).get();
+            if (user.data && user.data.length > 0) {
+              commentUserInfos[userId] = user.data[0];
+            }
+          }
+        }
+
+        return {
+          success: true,
+          comments: commentsResult.data,
+          commentUserInfos
+        };
+
+      case 'deleteComment':
+        // 删除评论（仅评论者可以删除）
+        const commentToDelete = await db.collection('comments').doc(event.commentId).get();
+        if (!commentToDelete.data || commentToDelete.data.userId !== openid) {
+          return {
+            success: false,
+            error: '无权限删除'
+          };
+        }
+
+        await db.collection('comments').doc(event.commentId).remove();
+        return {
+          success: true
+        };
+
       default:
         return {
           success: false,

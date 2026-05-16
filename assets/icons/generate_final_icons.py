@@ -151,6 +151,22 @@ def user_shape(x, y, size, cx, cy):
 
     return False, None
 
+def more_shape(x, y, size, cx, cy):
+    """更多图标（三个点）"""
+    s = size
+    dot_r = s * 0.1
+    dot_spacing = s * 0.3
+
+    # 三个圆点，垂直排列
+    for i, dy_offset in enumerate([-0.4, 0, 0.4]):
+        dot_cy = cy + cy * dy_offset
+        dx = x - cx
+        dy = y - dot_cy
+        if dx*dx + dy*dy <= dot_r*dot_r:
+            return True, None
+
+    return False, None
+
 def main():
     out_dir = os.path.dirname(os.path.abspath(__file__))
     size = 81  # 微信小程序标准 TabBar 图标尺寸
@@ -167,6 +183,8 @@ def main():
         ('star-active.png', star_shape, (255, 182, 193), True),
         ('user.png', user_shape, (153, 153, 153), False),
         ('user-active.png', user_shape, (255, 182, 193), True),
+        ('more.png', more_shape, (153, 153, 153), False),
+        ('more-active.png', more_shape, (255, 182, 193), True),
     ]
 
     for filename, shape_func, color, is_active in icons_config:

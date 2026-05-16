@@ -1,0 +1,78 @@
+/* pages/more/more.wxss */
+.container {
+  min-height: 100vh;
+  background: #FFF0F5;
+  padding: 40rpx 30rpx;
+}
+
+/* 功能网格 */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30rpx;
+}
+
+.feature-card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(255, 182, 193, 0.15);
+  transition: transform 0.2s;
+}
+
+.feature-card:active {
+  transform: scale(0.97);
+}
+
+.feature-card.placeholder {
+  opacity: 0.6;
+}
+
+.feature-icon-wrap {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.feature-icon-wrap.poke {
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  box-shadow: 0 8rpx 24rpx rgba(255, 105, 180, 0.3);
+}
+
+.feature-icon-wrap.placeholder-bg {
+  background: #f0f0f0;
+}
+
+.feature-icon {
+  font-size: 60rpx;
+}
+
+.feature-name {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.feature-desc {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 提示 */
+.tip-section {
+  margin-top: 60rpx;
+  text-align: center;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #ccc;
+}

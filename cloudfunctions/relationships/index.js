@@ -65,7 +65,7 @@ exports.main = async (event, context) => {
  * 绑定关系
  */
 async function bindRelationship(openid, event) {
-  const { partnerCode, relationType } = event;
+  const { partnerCode, relationType, customRelationName } = event;
 
   if (!partnerCode) {
     return { success: false, error: '请提供邀请码' };
@@ -76,6 +76,14 @@ async function bindRelationship(openid, event) {
   if (!RELATION_TYPES[type]) {
     return { success: false, error: '无效的关系类型' };
   }
+
+  // 如果是自定义类型，需要提供自定义名称
+  if (type === 'custom' && !customRelationName) {
+    return { success: false, error: '请输入自定义关系名称' };
+  }
+
+  // 获取类型显示名称
+  const typeName = type === 'custom' ? customRelationName : RELATION_TYPES[type];
 
   // 通过邀请码查找对方
   const partnerResult = await db.collection('users').where({
@@ -97,7 +105,7 @@ async function bindRelationship(openid, event) {
     partnerId: partner._openid,
     partnerName: partner.nickname || 'TA',
     type: type,
-    typeName: RELATION_TYPES[type],
+    typeName: typeName,
     status: 'active',
     createdAt: db.serverDate(),
     unbindRequestAt: null,
@@ -145,7 +153,7 @@ async function bindRelationship(openid, event) {
       partnerId: openid,
       partnerName: currentUser.nickname || 'TA',
       type: type,
-      typeName: RELATION_TYPES[type],
+      typeName: typeName,
       status: 'active',
       createdAt: db.serverDate(),
       unbindRequestAt: null,

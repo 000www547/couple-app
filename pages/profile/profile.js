@@ -20,10 +20,16 @@ Page({
       birthday: ''
     },
     partnerCode: '',
-    selectedRelationType: 'couple'
+    selectedRelationType: 'couple',
+    customRelationName: '',
+    today: '' // 今天日期，用于日期选择限制
   },
 
   onShow: function() {
+    // 设置今天的日期用于日期选择限制
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    this.setData({ today: today });
     this.getUserInfo();
   },
 
@@ -143,6 +149,13 @@ Page({
   setRelationType: function(e) {
     this.setData({
       selectedRelationType: e.currentTarget.dataset.type
+    });
+  },
+
+  // 自定义关系名称输入
+  onCustomRelationInput: function(e) {
+    this.setData({
+      customRelationName: e.detail.value
     });
   },
 
@@ -303,7 +316,8 @@ Page({
       data: {
         action: 'bind',
         partnerCode: code,
-        relationType: that.data.selectedRelationType
+        relationType: that.data.selectedRelationType,
+        customRelationName: that.data.selectedRelationType === 'custom' ? that.data.customRelationName : ''
       }
     }).then(res => {
       wx.hideLoading();

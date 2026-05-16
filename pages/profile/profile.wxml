@@ -99,7 +99,7 @@
 
       <view class="input-group">
         <text class="input-label">在一起的日子（选填）</text>
-        <picker mode="date" value="{{editForm.anniversaryDate}}" bindchange="onAnniversaryChange">
+        <picker mode="date" value="{{editForm.anniversaryDate}}" bindchange="onAnniversaryChange" end="{{today}}">
           <view class="picker">
             {{editForm.anniversaryDate || '选择日期'}}
           </view>
@@ -108,7 +108,7 @@
 
       <view class="input-group">
         <text class="input-label">我的生日（选填，可保密）</text>
-        <picker mode="date" value="{{editForm.birthday}}" bindchange="onBirthdayChange">
+        <picker mode="date" value="{{editForm.birthday}}" bindchange="onBirthdayChange" end="{{today}}">
           <view class="picker">
             {{editForm.birthday || '选择日期或留空'}}
           </view>
@@ -139,6 +139,11 @@
         <view class="relation-type-btn {{selectedRelationType === 'custom' ? 'active' : ''}}" bindtap="setRelationType" data-type="custom">
           自定义
         </view>
+      </view>
+
+      <!-- 自定义关系名称输入（仅选择"自定义"时显示） -->
+      <view class="input-group" wx:if="{{selectedRelationType === 'custom'}}">
+        <input class="input" placeholder="请输入你们的关系名称" value="{{customRelationName}}" bindinput="onCustomRelationInput"/>
       </view>
 
       <view class="input-group">
