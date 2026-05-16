@@ -227,7 +227,12 @@ Page({
     }).then(res => {
       if (res.result.success) {
         this.loadMoments();
+      } else {
+        wx.showToast({ title: res.result.error || '操作失败', icon: 'none' });
       }
+    }).catch(err => {
+      console.error('点赞失败', err);
+      wx.showToast({ title: '操作失败', icon: 'none' });
     });
   },
 
@@ -351,7 +356,7 @@ Page({
         // 重新加载评论
         this.loadAllComments();
       } else {
-        wx.showToast({ title: '评论失败', icon: 'none' });
+        wx.showToast({ title: res.result.error || '评论失败', icon: 'none' });
       }
     }).catch(err => {
       wx.hideLoading();
