@@ -33,13 +33,12 @@
       <text class="feature-desc">长按发送心跳 +2</text>
     </view>
 
-    <!-- 预留更多功能入口 -->
-    <view class="feature-card placeholder">
-      <view class="feature-icon-wrap placeholder-bg">
-        <text class="feature-icon">✨</text>
+    <view class="feature-card" bindtap="showAbout">
+      <view class="feature-icon-wrap about-bg">
+        <text class="feature-icon">💝</text>
       </view>
-      <text class="feature-name">敬请期待</text>
-      <text class="feature-desc">更多功能开发中</text>
+      <text class="feature-name">关于</text>
+      <text class="feature-desc">了解泡芙空间</text>
     </view>
   </view>
 

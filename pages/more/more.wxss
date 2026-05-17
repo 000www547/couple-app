@@ -83,6 +83,11 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
+.feature-icon-wrap.about-bg {
+  background: linear-gradient(135deg, #9C27B0, #E91E63);
+  box-shadow: 0 8rpx 24rpx rgba(156, 39, 176, 0.3);
+}
+
 .feature-icon {
   font-size: 56rpx;
 }

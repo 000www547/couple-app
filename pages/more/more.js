@@ -73,5 +73,15 @@ Page({
       showCancel: false,
       confirmText: '知道了'
     });
+  },
+
+  // 显示关于信息
+  showAbout: function() {
+    wx.showModal({
+      title: '💝 泡芙空间',
+      content: '一款专为亲密关系设计的日常分享小程序\n\n📌 主要功能：\n• 纪念日管理\n• 甜蜜时刻\n• 心愿清单\n• 戳一戳互动\n• 亲密度系统\n\n🎨 开发：Claude & 000www547\n📧 GitHub: github.com/000www547/couple-app',
+      showCancel: false,
+      confirmText: '了解了'
+    });
   }
 });
