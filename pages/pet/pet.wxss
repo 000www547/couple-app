@@ -1,0 +1,309 @@
+/* pages/pet/pet.wxss */
+.container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFF5F5 0%, #FFF 100%);
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+/* 未绑定提示 */
+.bind-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.bind-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.bind-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 40rpx;
+}
+
+.bind-btn {
+  width: 300rpx;
+}
+
+/* 创建界面 */
+.create-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80rpx;
+}
+
+.create-icon {
+  font-size: 150rpx;
+  margin-bottom: 30rpx;
+}
+
+.create-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15rpx;
+}
+
+.create-subtitle {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 60rpx;
+}
+
+.pet-select {
+  display: flex;
+  gap: 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.pet-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 50rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  border: 4rpx solid #eee;
+  transition: all 0.3s;
+}
+
+.pet-option.active {
+  border-color: #FF6B6B;
+  background: #FFF5F5;
+}
+
+.pet-emoji {
+  font-size: 80rpx;
+  margin-bottom: 10rpx;
+}
+
+.pet-name {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 40rpx;
+}
+
+.pet-name-input {
+  width: 100%;
+  height: 88rpx;
+  background: #fff;
+  border-radius: 44rpx;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+  font-size: 30rpx;
+  border: 2rpx solid #eee;
+}
+
+/* 宠物展示界面 */
+.pet-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pet-tabs {
+  display: flex;
+  background: #fff;
+  border-radius: 40rpx;
+  padding: 8rpx;
+  margin-bottom: 40rpx;
+}
+
+.pet-tab {
+  padding: 16rpx 40rpx;
+  font-size: 28rpx;
+  color: #999;
+  border-radius: 32rpx;
+  transition: all 0.3s;
+}
+
+.pet-tab.active {
+  background: #1A1A1A;
+  color: #fff;
+}
+
+.pet-card {
+  width: 100%;
+  background: #fff;
+  border-radius: 30rpx;
+  padding: 50rpx 40rpx;
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.05);
+}
+
+.pet-mood {
+  text-align: center;
+  font-size: 180rpx;
+  margin-bottom: 20rpx;
+}
+
+.pet-name-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  margin-bottom: 40rpx;
+}
+
+.pet-name-display text {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 好感度 */
+.affection-section,
+.hunger-section {
+  margin-bottom: 35rpx;
+}
+
+.affection-header,
+.hunger-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.affection-label,
+.hunger-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.affection-level {
+  font-size: 24rpx;
+  color: #FF6B6B;
+  background: #FFF5F5;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.hunger-status {
+  font-size: 24rpx;
+}
+
+.hunger-status.normal {
+  color: #FFA500;
+}
+
+.hunger-status.full {
+  color: #52C41A;
+}
+
+.affection-bar,
+.hunger-bar {
+  height: 16rpx;
+  background: #f0f0f0;
+  border-radius: 8rpx;
+  overflow: hidden;
+  position: relative;
+}
+
+.affection-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+  border-radius: 8rpx;
+  transition: width 0.5s ease;
+}
+
+.hunger-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #52C41A, #95DE64);
+  border-radius: 8rpx;
+  transition: width 0.5s ease;
+}
+
+.hunger-fill.low {
+  background: linear-gradient(90deg, #FF4D4F, #FF7875);
+}
+
+.affection-percent,
+.hunger-percent {
+  position: absolute;
+  right: 0;
+  top: 24rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 操作按钮 */
+.action-btns {
+  display: flex;
+  gap: 30rpx;
+  margin-top: 50rpx;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx;
+  background: #f9f9f9;
+  border-radius: 20rpx;
+  transition: all 0.3s;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.feed-btn {
+  background: #FFF5F5;
+}
+
+.pet-btn {
+  background: #F0F5FF;
+}
+
+.action-icon {
+  font-size: 60rpx;
+  margin-bottom: 10rpx;
+}
+
+.action-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 解锁提示 */
+.unlock-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40rpx;
+  padding: 30rpx;
+  background: #FFF5F5;
+  border-radius: 20rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.unlock-text {
+  font-size: 26rpx;
+  color: #FF6B6B;
+  margin-bottom: 20rpx;
+}
+
+/* 弹窗样式 */
+.unlock-modal,
+.edit-name-modal {
+  padding: 40rpx;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40rpx;
+}

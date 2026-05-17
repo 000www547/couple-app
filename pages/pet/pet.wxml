@@ -1,0 +1,137 @@
+<!--pages/pet/pet.wxml-->
+<view class="container">
+  <!-- 未绑定提示 -->
+  <view class="bind-tip" wx:if="{{needBind}}">
+    <text class="bind-icon">💔</text>
+    <text class="bind-text">需要先绑定情侣关系才能养宠物</text>
+    <van-button type="primary" round color="#1A1A1A" bindtap="goToBind" custom-class="bind-btn">去绑定</van-button>
+  </view>
+
+  <!-- 未养宠物 - 创建界面 -->
+  <view class="create-section" wx:elif="{{!hasPet && !needBind}}">
+    <view class="create-icon">🐾</view>
+    <text class="create-title">你们还没有宠物</text>
+    <text class="create-subtitle">选择一个宠物开始你们的养成之旅吧</text>
+
+    <view class="pet-select">
+      <view class="pet-option {{newPetType === 'dog' ? 'active' : ''}}" bindtap="selectPetType" data-type="dog">
+        <text class="pet-emoji">🐕</text>
+        <text class="pet-name">小狗</text>
+      </view>
+      <view class="pet-option {{newPetType === 'rabbit' ? 'active' : ''}}" bindtap="selectPetType" data-type="rabbit">
+        <text class="pet-emoji">🐰</text>
+        <text class="pet-name">小兔</text>
+      </view>
+    </view>
+
+    <view class="input-group">
+      <input class="pet-name-input" placeholder="给你的宠物起个名字吧" value="{{newPetName}}" bindinput="onNameInput" maxlength="10"/>
+    </view>
+
+    <van-button type="primary" block round color="#1A1A1A" bindtap="createPet" disabled="{{!newPetType}}">开始养宠物</van-button>
+  </view>
+
+  <!-- 宠物展示界面 -->
+  <view class="pet-section" wx:elif="{{hasPet && !needBind}}">
+    <!-- 宠物切换标签 -->
+    <view class="pet-tabs" wx:if="{{pet2}}">
+      <view class="pet-tab {{currentSlot === 'pet1' ? 'active' : ''}}" bindtap="switchPet" data-slot="pet1">
+        {{pet1.name}}
+      </view>
+      <view class="pet-tab {{currentSlot === 'pet2' ? 'active' : ''}}" bindtap="switchPet" data-slot="pet2">
+        {{pet2.name}}
+      </view>
+    </view>
+
+    <!-- 当前宠物卡片 -->
+    <view class="pet-card" wx:if="{{currentPet}}">
+      <!-- 心情emoji -->
+      <view class="pet-mood">{{currentPet.mood}}</view>
+
+      <!-- 名字 -->
+      <view class="pet-name-display" bindtap="showEditName">
+        <text>{{currentPet.name}}</text>
+        <van-icon name="edit-o" size="24rpx" color="#999"/>
+      </view>
+
+      <!-- 好感度 -->
+      <view class="affection-section">
+        <view class="affection-header">
+          <text class="affection-label">好感度</text>
+          <text class="affection-level">{{currentPet.affectionLevel}}</text>
+        </view>
+        <view class="affection-bar">
+          <view class="affection-fill" style="width: {{currentPet.affection}}%"></view>
+        </view>
+        <text class="affection-percent">{{currentPet.affection}}%</text>
+      </view>
+
+      <!-- 饱食度 -->
+      <view class="hunger-section">
+        <view class="hunger-header">
+          <text class="hunger-label">饱食度</text>
+          <text class="hunger-status" wx:if="{{currentPet.hunger < 30}}">⚠️ 好饿</text>
+          <text class="hunger-status normal" wx:elif="{{currentPet.hunger < 60}}">😐 一般</text>
+          <text class="hunger-status full" wx:else>😊 饱饱</text>
+        </view>
+        <view class="hunger-bar">
+          <view class="hunger-fill {{currentPet.hunger < 30 ? 'low' : ''}}" style="width: {{currentPet.hunger}}%"></view>
+        </view>
+        <text class="hunger-percent">{{currentPet.hunger}}%</text>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="action-btns">
+        <view class="action-btn feed-btn" bindtap="feedPet">
+          <text class="action-icon">🍖</text>
+          <text class="action-label">投喂</text>
+        </view>
+        <view class="action-btn pet-btn" bindtap="petAnimal">
+          <text class="action-icon">👋</text>
+          <text class="action-label">摸摸</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 解锁第二只提示 -->
+    <view class="unlock-tip" wx:if="{{canUnlockPet2 && !pet2}}">
+      <text class="unlock-text">第一只好感度已满，解锁第二只宠物！</text>
+      <van-button type="primary" round color="#FF6B6B" bindtap="showUnlockModal" size="small">解锁第二只</van-button>
+    </view>
+  </view>
+
+  <!-- 创建第二只宠物弹窗 -->
+  <van-popup show="{{showUnlockPopup}}" round position="bottom" bind:close="hideUnlockModal">
+    <view class="unlock-modal">
+      <view class="modal-title">解锁第二只宠物</view>
+
+      <view class="pet-select">
+        <view class="pet-option {{newPetType === 'dog' ? 'active' : ''}}" bindtap="selectPetType" data-type="dog">
+          <text class="pet-emoji">🐕</text>
+          <text class="pet-name">小狗</text>
+        </view>
+        <view class="pet-option {{newPetType === 'rabbit' ? 'active' : ''}}" bindtap="selectPetType" data-type="rabbit">
+          <text class="pet-emoji">🐰</text>
+          <text class="pet-name">小兔</text>
+        </view>
+      </view>
+
+      <view class="input-group">
+        <input class="pet-name-input" placeholder="给第二只宠物起个名字" value="{{newPetName}}" bindinput="onNameInput" maxlength="10"/>
+      </view>
+
+      <van-button type="primary" block round color="#FF6B6B" bindtap="unlockPet2" disabled="{{!newPetType}}">确认解锁</van-button>
+    </view>
+  </van-popup>
+
+  <!-- 修改名字弹窗 -->
+  <van-popup show="{{showEditNamePopup}}" round position="bottom" bind:close="hideEditNamePopup">
+    <view class="edit-name-modal">
+      <view class="modal-title">修改名字</view>
+      <view class="input-group">
+        <input class="pet-name-input" placeholder="输入新名字" value="{{editName}}" bindinput="onEditNameInput" maxlength="10"/>
+      </view>
+      <van-button type="primary" block round color="#1A1A1A" bindtap="confirmEditName">确认修改</van-button>
+    </view>
+  </van-popup>
+</view>

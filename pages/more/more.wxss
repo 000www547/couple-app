@@ -79,6 +79,11 @@
   box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.3);
 }
 
+.feature-icon-wrap.pet {
+  background: linear-gradient(135deg, #FFD93D, #FFA940);
+  box-shadow: 0 8rpx 24rpx rgba(255, 169, 64, 0.3);
+}
+
 .feature-icon-wrap.placeholder-bg {
   background: rgba(255, 255, 255, 0.08);
 }

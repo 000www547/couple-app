@@ -59,6 +59,13 @@ Page({
     });
   },
 
+  // 跳转宠物页面
+  goToPet: function() {
+    wx.navigateTo({
+      url: '/pages/pet/pet'
+    });
+  },
+
   // 显示亲密度帮助
   showIntimacyHelp: function() {
     const level = this.data.intimacyLevel;

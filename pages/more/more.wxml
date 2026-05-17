@@ -36,6 +36,14 @@
       <text class="feature-desc">长按发送心跳 +2</text>
     </view>
 
+    <view class="feature-card" bindtap="goToPet">
+      <view class="feature-icon-wrap pet">
+        <text class="feature-icon">🐾</text>
+      </view>
+      <text class="feature-name">宠物</text>
+      <text class="feature-desc">合养宠物养成</text>
+    </view>
+
     <!-- 新互动功能请插入此处（关于之前） -->
 
     <!-- 预留：更多互动功能占位 -->
