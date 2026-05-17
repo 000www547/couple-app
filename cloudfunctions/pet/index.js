@@ -88,11 +88,22 @@ async function initPet(openid, event) {
   }
 
   const user = userResult.data[0];
-  if (!user.activeRelationship) {
+
+  // 优先从 relationships 中获取伴侣 ID（兼容新绑定方式）
+  let partnerId = null;
+  if (user.relationships && user.relationships.length > 0) {
+    const active = user.relationships.find(r => r.status === 'active');
+    if (active) partnerId = active.partnerId;
+  }
+  // 兼容旧数据：activeRelationship
+  if (!partnerId && user.activeRelationship) {
+    partnerId = user.activeRelationship;
+  }
+
+  if (!partnerId) {
     return { success: false, error: '请先绑定情侣关系' };
   }
 
-  const partnerId = user.activeRelationship;
   const coupleId = [openid, partnerId].sort().join('_');
 
   // 检查是否已有宠物数据
@@ -171,11 +182,22 @@ async function getPet(openid) {
   }
 
   const user = userResult.data[0];
-  if (!user.activeRelationship) {
+
+  // 优先从 relationships 中获取伴侣 ID（兼容新绑定方式）
+  let partnerId = null;
+  if (user.relationships && user.relationships.length > 0) {
+    const active = user.relationships.find(r => r.status === 'active');
+    if (active) partnerId = active.partnerId;
+  }
+  // 兼容旧数据：activeRelationship
+  if (!partnerId && user.activeRelationship) {
+    partnerId = user.activeRelationship;
+  }
+
+  if (!partnerId) {
     return { success: false, error: '请先绑定情侣关系', needBind: true };
   }
 
-  const partnerId = user.activeRelationship;
   const coupleId = [openid, partnerId].sort().join('_');
 
   const petResult = await db.collection('pets').where({
@@ -395,11 +417,22 @@ async function getPetData(openid) {
   }
 
   const user = userResult.data[0];
-  if (!user.activeRelationship) {
+
+  // 优先从 relationships 中获取伴侣 ID（兼容新绑定方式）
+  let partnerId = null;
+  if (user.relationships && user.relationships.length > 0) {
+    const active = user.relationships.find(r => r.status === 'active');
+    if (active) partnerId = active.partnerId;
+  }
+  // 兼容旧数据：activeRelationship
+  if (!partnerId && user.activeRelationship) {
+    partnerId = user.activeRelationship;
+  }
+
+  if (!partnerId) {
     return null;
   }
 
-  const partnerId = user.activeRelationship;
   const coupleId = [openid, partnerId].sort().join('_');
 
   const petResult = await db.collection('pets').where({

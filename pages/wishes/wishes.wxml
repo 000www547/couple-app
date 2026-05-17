@@ -16,14 +16,17 @@
     <van-tab title="共同" name="shared"></van-tab>
   </van-tabs>
 
-  <!-- 心愿列表 -->
+      <!-- 心愿列表 -->
   <scroll-view scroll-y class="wishes-list">
     <view class="wish-item {{item.isCompleted ? 'completed' : ''}}" wx:for="{{wishes}}" wx:key="_id">
       <view class="wish-checkbox" bindtap="toggleComplete" data-id="{{item._id}}">
         <van-checkbox value="{{item.isCompleted}}" disabled="{{true}}" checked-color="#FF6B9D"/>
       </view>
       <view class="wish-content">
-        <text class="wish-title">{{item.title}}</text>
+        <view class="wish-header">
+          <text class="wish-title">{{item.title}}</text>
+          <text class="wish-creator" wx:if="{{activeTab === 'all' || activeTab === 'shared'}}">{{item.creatorNickname === currentUser.nickname || item.userId === currentUser._openid ? '我' : item.creatorNickname || '匿名用户'}}</text>
+        </view>
         <text class="wish-desc" wx:if="{{item.description}}">{{item.description}}</text>
         <view class="wish-meta" wx:if="{{item.isShared}}">
           <van-tag type="warning" size="small">共同心愿</van-tag>

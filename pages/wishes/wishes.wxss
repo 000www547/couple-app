@@ -58,6 +58,15 @@
   flex: 1;
 }
 
+.wish-creator {
+  margin-left: 12rpx;
+  font-size: 22rpx;
+  color: #FF6B9D;
+  background: rgba(255, 107, 157, 0.1);
+  padding: 2rpx 12rpx;
+  border-radius: 16rpx;
+}
+
 .wish-title {
   font-size: 28rpx;
   color: #1A1A1A;
@@ -143,6 +152,8 @@
   margin-bottom: 40rpx;
   font-size: 28rpx;
   color: #1A1A1A;
+  position: relative;
+  z-index: 100;
 }
 
 .empty-tip, .loading-tip {

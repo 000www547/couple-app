@@ -22,7 +22,7 @@
     </view>
   </view>
 
-  <!-- 心动记录 -->
+      <!-- 心动记录 -->
   <view class="history-section">
     <view class="section-header">
       <text class="section-title">心动记录</text>
@@ -35,7 +35,7 @@
           <image class="heartbeat-avatar" src="{{userInfos[item.userId].avatar || '/assets/icons/user.png'}}"/>
           <view class="heartbeat-info">
             <text class="heartbeat-user">{{userInfos[item.userId].nickname || '匿名用户'}}</text>
-            <text class="heartbeat-type">{{item.type === 'poke' ? '戳了你一下 👆' : '送了一颗心跳 💗'}}</text>
+            <text class="heartbeat-type">{{item.isSentByMe ? ('我' + (item.type === 'poke' ? '戳了戳对方 👆' : '送了对方一颗心跳 💗')) : (item.type === 'poke' ? '戳了戳我 👆' : '送了我一颗心跳 💗')}}</text>
           </view>
         </view>
         <view class="heartbeat-right">

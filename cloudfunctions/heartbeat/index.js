@@ -59,36 +59,44 @@ exports.main = async (event, context) => {
       }
 
       case 'getList': {
-        // 获取心跳列表（仅显示自己和伴侣的）
-        let userIds = [openid];
+        // 获取心跳列表 - 包含自己发送的 + 伴侣发送给我的
+        let partnerId = null;
 
-        // 内联获取伴侣ID，避免单独函数调用
         const userListRes = await db.collection('users').where({ _openid: openid }).get();
         if (userListRes.data && userListRes.data.length > 0) {
           const u = userListRes.data[0];
-          let pid = null;
           if (u.relationships && u.relationships.length > 0) {
             const active = u.relationships.find(r => r.status === 'active');
-            if (active) pid = active.partnerId;
+            if (active) partnerId = active.partnerId;
           }
-          if (!pid) pid = u.activeRelationship || null;
-          if (pid) userIds.push(pid);
+          if (!partnerId) partnerId = u.activeRelationship || null;
         }
 
+        // 查询自己发送的 + 伴侣发送给我的
         const listResult = await db.collection('heartbeats')
-          .where({ userId: _.in(userIds) })
+          .where(_.or(
+            { userId: openid },      // 我发送的
+            { partnerId: openid }    // 伴侣发送给我的
+          ))
           .orderBy('createTime', 'desc')
           .limit(50)
           .get();
 
-        // 获取用户信息（批量查询，避免循环DB调用）
+        // 获取用户信息（批量查询）
         const uniqueUserIds = [...new Set(listResult.data.map(h => h.userId))];
         const userInfosRes = await db.collection('users')
           .where({ _openid: _.in(uniqueUserIds) })
           .get();
         const userInfos = {};
         userInfosRes.data.forEach(u => { userInfos[u._openid] = u; });
-        return { success: true, heartbeats: listResult.data, userInfos };
+
+        // 附加方向标记，用于前端区分"我发出的"和"我收到的"
+        const heartbeats = listResult.data.map(h => ({
+          ...h,
+          isSentByMe: h.userId === openid
+        }));
+
+        return { success: true, heartbeats, userInfos };
       }
 
       case 'markRead': {

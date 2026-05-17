@@ -47,7 +47,7 @@ exports.main = async (event, context) => {
         if (user.data && user.data.length > 0) {
           const userData = user.data[0];
 
-          // 从 relationships 中获取所有关系
+          // 从 relationships 中获取所有关系（优先，兼容新绑定方式）
           if (userData.relationships && userData.relationships.length > 0) {
             const activeRelations = userData.relationships.filter(r => r.status === 'active');
             partnerIds = activeRelations.map(r => r.partnerId);
@@ -73,51 +73,61 @@ exports.main = async (event, context) => {
           };
         } else if (event.type === 'shared') {
           // 共同心愿 - 自己设为共同的 + 伴侣设为共同的
+          let sharedWishes = [];
           if (partnerIds.length === 0) {
             // 没有关系，返回自己的共同心愿
             const myShared = await db.collection('wishes').where({
               userId: openid,
               isShared: true
             }).orderBy('createTime', 'desc').get();
-
-            return {
-              success: true,
-              wishes: myShared.data
-            };
+            sharedWishes = myShared.data;
+          } else {
+            const listResult = await db.collection('wishes').where(
+              _.or([
+                { userId: openid, isShared: true },
+                ...partnerIds.map(pid => ({ userId: pid, isShared: true }))
+              ])
+            ).orderBy('createTime', 'desc').get();
+            sharedWishes = listResult.data;
           }
-
-          const listResult = await db.collection('wishes').where(
-            _.or([
-              { userId: openid, isShared: true },
-              ...partnerIds.map(pid => ({ userId: pid, isShared: true }))
-            ])
-          ).orderBy('createTime', 'desc').get();
-
-          return {
-            success: true,
-            wishes: listResult.data
-          };
+          // 补充创建者昵称
+          if (sharedWishes.length > 0) {
+            const creatorIds = [...new Set(sharedWishes.map(w => w.userId))];
+            const creatorRes = await db.collection('users').where({ _openid: _.in(creatorIds) }).get();
+            const creatorMap = {};
+            creatorRes.data.forEach(u => { creatorMap[u._openid] = u.nickname || '匿名用户'; });
+            sharedWishes = sharedWishes.map(w => ({
+              ...w,
+              creatorNickname: creatorMap[w.userId] || '匿名用户'
+            }));
+          }
+          return { success: true, wishes: sharedWishes };
         } else {
           // 所有 - 自己和伴侣的所有心愿
+          let allWishes = [];
           if (userIds.length === 1) {
             const myResult = await db.collection('wishes').where({
               userId: openid
             }).orderBy('createTime', 'desc').get();
-
-            return {
-              success: true,
-              wishes: myResult.data
-            };
+            allWishes = myResult.data;
+          } else {
+            const listResult = await db.collection('wishes').where({
+              userId: _.in(userIds)
+            }).orderBy('createTime', 'desc').get();
+            allWishes = listResult.data;
           }
-
-          const listResult = await db.collection('wishes').where({
-            userId: _.in(userIds)
-          }).orderBy('createTime', 'desc').get();
-
-          return {
-            success: true,
-            wishes: listResult.data
-          };
+          // 补充创建者昵称
+          if (allWishes.length > 0) {
+            const creatorIds = [...new Set(allWishes.map(w => w.userId))];
+            const creatorRes = await db.collection('users').where({ _openid: _.in(creatorIds) }).get();
+            const creatorMap = {};
+            creatorRes.data.forEach(u => { creatorMap[u._openid] = u.nickname || '匿名用户'; });
+            allWishes = allWishes.map(w => ({
+              ...w,
+              creatorNickname: creatorMap[w.userId] || '匿名用户'
+            }));
+          }
+          return { success: true, wishes: allWishes };
         }
 
       case 'complete':
