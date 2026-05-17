@@ -83,9 +83,47 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-.feature-icon-wrap.about-bg {
-  background: linear-gradient(135deg, #9C27B0, #E91E63);
-  box-shadow: 0 8rpx 24rpx rgba(156, 39, 176, 0.3);
+/* 分区标题 */
+.section-title {
+  margin: 40rpx 0 20rpx;
+}
+
+.section-title-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+/* 关于区域（固定在底部） */
+.about-section {
+  margin-top: 60rpx;
+  padding: 24rpx 32rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.about-section:active {
+  opacity: 0.8;
+}
+
+.about-icon {
+  font-size: 36rpx;
+  margin-right: 16rpx;
+}
+
+.about-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.about-arrow {
+  font-size: 32rpx;
+  color: #999;
 }
 
 .feature-icon {

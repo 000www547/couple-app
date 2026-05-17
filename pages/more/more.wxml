@@ -23,7 +23,10 @@
     </view>
   </view>
 
-  <!-- 功能入口网格 -->
+  <!-- 互动小功能入口 -->
+  <view class="section-title">
+    <text class="section-title-text">互动小功能</text>
+  </view>
   <view class="feature-grid">
     <view class="feature-card" bindtap="goToPoke">
       <view class="feature-icon-wrap poke">
@@ -33,17 +36,27 @@
       <text class="feature-desc">长按发送心跳 +2</text>
     </view>
 
-    <view class="feature-card" bindtap="showAbout">
-      <view class="feature-icon-wrap about-bg">
-        <text class="feature-icon">💝</text>
+    <!-- 新互动功能请插入此处（关于之前） -->
+
+    <!-- 预留：更多互动功能占位 -->
+    <view class="feature-card placeholder">
+      <view class="feature-icon-wrap placeholder-bg">
+        <text class="feature-icon">✨</text>
       </view>
-      <text class="feature-name">关于</text>
-      <text class="feature-desc">了解泡芙空间</text>
+      <text class="feature-name">敬请期待</text>
+      <text class="feature-desc">更多功能开发中</text>
     </view>
   </view>
 
   <!-- 小提示 -->
   <view class="tip-section">
     <text class="tip-text">这里会陆续添加更多情侣互动小功能哦~</text>
+  </view>
+
+  <!-- 关于：固定在页面底部 -->
+  <view class="about-section" bindtap="showAbout">
+    <text class="about-icon">💝</text>
+    <text class="about-text">关于泡芙空间</text>
+    <text class="about-arrow">›</text>
   </view>
 </view>
