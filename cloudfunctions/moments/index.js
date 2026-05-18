@@ -83,6 +83,41 @@ exports.main = async (event, context) => {
           }
         }
 
+        // 转换动态图片 cloud:// → HTTPS
+        const cloudImages = [];
+        const imageMap = {}; // cloudUrl -> tempFileURL
+        listResult.data.forEach(m => {
+          if (m.images && m.images.length > 0) {
+            m.images.forEach(img => {
+              if (img && img.startsWith('cloud://') && !imageMap[img]) {
+                cloudImages.push(img);
+                imageMap[img] = null; // 占位，后续填充真实 URL
+              }
+            });
+          }
+        });
+
+        if (cloudImages.length > 0) {
+          try {
+            const imgUrlRes = await cloud.getTempFileURL({ fileList: cloudImages });
+            if (imgUrlRes.fileList) {
+              imgUrlRes.fileList.forEach(file => {
+                if (file.tempFileURL) {
+                  imageMap[file.fileID] = file.tempFileURL;
+                }
+              });
+            }
+            // 替换 moment.images 中的 cloud:// 为 HTTPS
+            listResult.data.forEach(m => {
+              if (m.images && m.images.length > 0) {
+                m.images = m.images.map(img => imageMap[img] || img);
+              }
+            });
+          } catch (e) {
+            console.error('[moments] 动态图片转换失败', e);
+          }
+        }
+
         return { success: true, moments: listResult.data, userInfos };
       }
 
