@@ -75,10 +75,14 @@ Page({
         const list = (res.result.heartbeats || []).map(item => {
           return {
             ...item,
-            timeAgo: this.formatTimeAgo(item.createTime)
+            timeAgo: this.formatTimeAgo(item.createTime),
+            isSentByMe: item.isSentByMe
           };
         });
-        this.setData({ heartbeats: list });
+        this.setData({
+          heartbeats: list,
+          heartbeatsUserInfos: res.result.userInfos || {}
+        });
       }
     }).catch(err => {
       this.setData({ loading: false });

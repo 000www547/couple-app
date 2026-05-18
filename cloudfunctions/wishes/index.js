@@ -103,17 +103,21 @@ exports.main = async (event, context) => {
           }
           return { success: true, wishes: sharedWishes };
         } else {
-          // 所有 - 自己和伴侣的所有心愿
+          // 全部 - 我的所有心愿（私人+共同）+ 伴侣的共同心愿
           let allWishes = [];
-          if (userIds.length === 1) {
+          if (partnerIds.length === 0) {
+            // 没有伴侣，只返回自己的
             const myResult = await db.collection('wishes').where({
               userId: openid
             }).orderBy('createTime', 'desc').get();
             allWishes = myResult.data;
           } else {
-            const listResult = await db.collection('wishes').where({
-              userId: _.in(userIds)
-            }).orderBy('createTime', 'desc').get();
+            const listResult = await db.collection('wishes').where(
+              _.or([
+                { userId: openid },  // 我的所有心愿
+                ...partnerIds.map(pid => ({ userId: pid, isShared: true }))  // 伴侣的共同心愿
+              ])
+            ).orderBy('createTime', 'desc').get();
             allWishes = listResult.data;
           }
           // 补充创建者昵称

@@ -155,6 +155,20 @@
   flex-shrink: 0;
 }
 
+.partner-tag {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5B8DEF, #7BA3F5);
+  color: #fff;
+  font-size: 22rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
 .history-text {
   font-size: 28rpx;
   color: #fff;

@@ -37,9 +37,15 @@
     <scroll-view scroll-y class="history-list">
       <block wx:if="{{heartbeats.length > 0}}">
         <view class="history-item" wx:for="{{heartbeats}}" wx:key="_id">
-          <view class="history-left">
+          <!-- 我发出的 -->
+          <view class="history-left" wx:if="{{item.isSentByMe}}">
             <view class="me-tag">我</view>
-            <text class="history-text">你戳了 {{partnerName}} ❤️</text>
+            <text class="history-text">戳了 {{partnerName}} ❤️</text>
+          </view>
+          <!-- 伴侣发给我的 -->
+          <view class="history-left" wx:else>
+            <view class="partner-tag">TA</view>
+            <text class="history-text">{{heartbeatsUserInfos[item.userId].nickname || partnerName}} 戳了我 ❤️</text>
           </view>
           <text class="history-time">{{item.timeAgo}}</text>
         </view>
