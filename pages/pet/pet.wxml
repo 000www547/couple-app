@@ -99,13 +99,18 @@
       <van-button type="primary" round color="#FF6B6B" bindtap="showUnlockModal" size="small">解锁第二只</van-button>
     </view>
 
-    <!-- 功能介绍 -->
-    <view class="pet-intro">
-      <view class="intro-title">💡 宠物合养说明</view>
-      <view class="intro-item">🍖 投喂 +2 好感度（每小时饱食度 -10%）</view>
-      <view class="intro-item">👋 摸摸 +3 好感度（每小时可触发一次）</view>
-      <view class="intro-item">🌟 第一只宠物好感度达 80% 时解锁第二只</view>
-      <view class="intro-item">💕 好感度等级：陌生 → 熟悉 → 亲近 → 亲密 → 灵魂伙伴</view>
+    <!-- 功能介绍（可折叠） -->
+    <view class="pet-intro" bindtap="toggleIntro">
+      <view class="intro-header">
+        <text class="intro-title">💡 宠物合养说明</text>
+        <text class="intro-arrow">{{showIntro ? '▲' : '▼'}}</text>
+      </view>
+      <view class="intro-body" wx:if="{{showIntro}}">
+        <view class="intro-item">🍖 投喂 +2 好感度（每小时饱食度 -10%）</view>
+        <view class="intro-item">👋 摸摸 +3 好感度（每小时可触发一次）</view>
+        <view class="intro-item">🌟 第一只宠物好感度达 80% 时解锁第二只</view>
+        <view class="intro-item">💕 好感度等级：陌生 → 熟悉 → 亲近 → 亲密 → 灵魂伙伴</view>
+      </view>
     </view>
   </view>
 

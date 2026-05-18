@@ -54,8 +54,35 @@ exports.main = async (event, context) => {
         const userInfosRes = await db.collection('users')
           .where({ _openid: _.in(uniqueUserIds) })
           .get();
+        // 转换头像 cloud:// → HTTPS
         const userInfos = {};
-        userInfosRes.data.forEach(u => { userInfos[u._openid] = u; });
+        const cloudAvatars = [];
+        const avatarMap = {}; // cloudUrl -> openid
+
+        userInfosRes.data.forEach(u => {
+          if (u.avatar && u.avatar.startsWith('cloud://')) {
+            cloudAvatars.push(u.avatar);
+            avatarMap[u.avatar] = u._openid;
+          }
+          userInfos[u._openid] = { _openid: u._openid, nickname: u.nickname, avatar: u.avatar };
+        });
+
+        if (cloudAvatars.length > 0) {
+          try {
+            const urlRes = await cloud.getTempFileURL({ fileList: cloudAvatars });
+            if (urlRes.fileList) {
+              urlRes.fileList.forEach(file => {
+                if (file.tempFileURL && avatarMap[file.fileID]) {
+                  const oid = avatarMap[file.fileID];
+                  userInfos[oid].avatar = file.tempFileURL;
+                }
+              });
+            }
+          } catch (e) {
+            console.error('[moments] 头像转换失败', e);
+          }
+        }
+
         return { success: true, moments: listResult.data, userInfos };
       }
 
@@ -167,8 +194,35 @@ exports.main = async (event, context) => {
         const commentUserInfosRes = await db.collection('users')
           .where({ _openid: _.in(commentUniqueUserIds) })
           .get();
+        // 转换头像 cloud:// → HTTPS
         const commentUserInfos = {};
-        commentUserInfosRes.data.forEach(u => { commentUserInfos[u._openid] = u; });
+        const cloudAvatars = [];
+        const avatarMap = {};
+
+        commentUserInfosRes.data.forEach(u => {
+          if (u.avatar && u.avatar.startsWith('cloud://')) {
+            cloudAvatars.push(u.avatar);
+            avatarMap[u.avatar] = u._openid;
+          }
+          commentUserInfos[u._openid] = { _openid: u._openid, nickname: u.nickname, avatar: u.avatar };
+        });
+
+        if (cloudAvatars.length > 0) {
+          try {
+            const urlRes = await cloud.getTempFileURL({ fileList: cloudAvatars });
+            if (urlRes.fileList) {
+              urlRes.fileList.forEach(file => {
+                if (file.tempFileURL && avatarMap[file.fileID]) {
+                  const oid = avatarMap[file.fileID];
+                  commentUserInfos[oid].avatar = file.tempFileURL;
+                }
+              });
+            }
+          } catch (e) {
+            console.error('[moments] 评论头像转换失败', e);
+          }
+        }
+
         return { success: true, comments: commentsResult.data, commentUserInfos };
       }
 

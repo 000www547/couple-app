@@ -21,7 +21,8 @@ Page({
     editName: '',
     
     // 操作状态
-    isOperating: false
+    isOperating: false,
+    showIntro: false  // 功能介绍是否展开
   },
 
   onShow: function() {
@@ -296,5 +297,10 @@ Page({
   // 去绑定
   goToBind: function() {
     wx.navigateBack();
+  },
+
+  // 切换功能介绍展开/收起
+  toggleIntro: function() {
+    this.setData({ showIntro: !this.data.showIntro });
   }
 });
