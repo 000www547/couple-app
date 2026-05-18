@@ -52,7 +52,7 @@
     <view class="relationship-list">
       <view class="relationship-item" wx:for="{{relationships}}" wx:key="partnerId">
         <view class="relationship-left">
-          <image class="avatar-small" src="/assets/icons/user.png"/>
+          <image class="avatar-small" src="{{item.partnerAvatar || '/assets/icons/user.png'}}" binderror="onAvatarError" data-target="partnerInfo"/>
           <view class="relationship-info">
             <text class="relationship-name">{{item.partnerName || 'TA'}}</text>
             <view class="relationship-tags">

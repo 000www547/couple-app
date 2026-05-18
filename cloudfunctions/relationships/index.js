@@ -194,8 +194,51 @@ async function getRelationshipList(openid) {
   const relationships = user.relationships || [];
   const activeRelationship = user.activeRelationship;
 
+  // 获取所有伴侣的最新信息（昵称 + 头像）
+  const partnerIds = relationships.map(r => r.partnerId);
+  let partnerNameMap = {};
+  let partnerAvatarMap = {};
+  if (partnerIds.length > 0) {
+    const partnerUsers = await db.collection('users')
+      .where({ _openid: _.in(partnerIds) })
+      .get();
+    partnerUsers.data.forEach(p => {
+      partnerNameMap[p._openid] = p.nickname || 'TA';
+      partnerAvatarMap[p._openid] = p.avatar || '';
+    });
+
+    // 批量转换 cloud:// 头像为 HTTPS
+    const cloudAvatars = Object.entries(partnerAvatarMap)
+      .filter(([_, avatar]) => avatar && avatar.startsWith('cloud://'))
+      .map(([_, avatar]) => avatar);
+
+    if (cloudAvatars.length > 0) {
+      try {
+        const urlRes = await cloud.getTempFileURL({ fileList: cloudAvatars });
+        if (urlRes.fileList) {
+          let cloudIndex = 0;
+          Object.keys(partnerAvatarMap).forEach(openid => {
+            const avatar = partnerAvatarMap[openid];
+            if (avatar && avatar.startsWith('cloud://')) {
+              const match = urlRes.fileList[cloudIndex];
+              if (match && match.tempFileURL) {
+                partnerAvatarMap[openid] = match.tempFileURL;
+              }
+              cloudIndex++;
+            }
+          });
+        }
+      } catch (e) {
+        console.error('[relationships] 头像批量转换失败', e);
+      }
+    }
+  }
+
   // 获取每个关系的状态信息
   const enrichedRelationships = await Promise.all(relationships.map(async (rel) => {
+    // 更新为最新的伴侣昵称和头像
+    rel.partnerName = partnerNameMap[rel.partnerId] || rel.partnerName || 'TA';
+    rel.partnerAvatar = partnerAvatarMap[rel.partnerId] || '';
     // 如果有待确认的解绑请求，计算剩余天数
     if (rel.status === 'pending_unbind' && rel.unbindRequestAt) {
       const requestTime = new Date(rel.unbindRequestAt);
