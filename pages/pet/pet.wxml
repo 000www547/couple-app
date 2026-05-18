@@ -98,6 +98,15 @@
       <text class="unlock-text">第一只好感度已满，解锁第二只宠物！</text>
       <van-button type="primary" round color="#FF6B6B" bindtap="showUnlockModal" size="small">解锁第二只</van-button>
     </view>
+
+    <!-- 功能介绍 -->
+    <view class="pet-intro">
+      <view class="intro-title">💡 宠物合养说明</view>
+      <view class="intro-item">🍖 投喂 +2 好感度（每小时饱食度 -10%）</view>
+      <view class="intro-item">👋 摸摸 +3 好感度（每小时可触发一次）</view>
+      <view class="intro-item">🌟 第一只宠物好感度达 80% 时解锁第二只</view>
+      <view class="intro-item">💕 好感度等级：陌生 → 熟悉 → 亲近 → 亲密 → 灵魂伙伴</view>
+    </view>
   </view>
 
   <!-- 创建第二只宠物弹窗 -->
