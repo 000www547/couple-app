@@ -124,13 +124,18 @@ Page({
         }));
         // 转换 cloud:// 头像为 HTTPS
         if (partner.avatar && partner.avatar.startsWith('cloud://')) {
+          console.log('[profile] 开始转换头像:', partner.avatar);
           try {
             const urlRes = await wx.cloud.getTempFileURL({ fileList: [partner.avatar] });
+            console.log('[profile] getTempFileURL 返回:', JSON.stringify(urlRes));
             if (urlRes.fileList && urlRes.fileList[0] && urlRes.fileList[0].tempFileURL) {
               partner.avatar = urlRes.fileList[0].tempFileURL;
+              console.log('[profile] 头像转换成功:', partner.avatar);
+            } else {
+              console.log('[profile] 头像转换失败: 无 tempFileURL');
             }
           } catch (e) {
-            console.error('[profile] 头像转换失败', e);
+            console.error('[profile] 头像转换异常:', e);
           }
         }
         that.setData({ partnerInfo: partner });
