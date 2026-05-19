@@ -5,12 +5,17 @@
   "main": "app.js",
   "scripts": {
     "dev": "echo \"请使用微信开发者工具打开项目\"",
-    "build": "echo \"请使用微信开发者工具构建 npm\""
+    "build": "echo \"请使用微信开发者工具构建 npm\"",
+    "typecheck": "tsc --noEmit",
+    "typecheck:cf": "tsc --project tsconfig.cloudfunctions.json --noEmit"
   },
   "keywords": ["wechat", "miniprogram", "couple"],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@vant/weapp": "^1.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
   }
 }

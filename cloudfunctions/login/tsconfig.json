@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": ".",
+    "declaration": true,
+    "declarationMap": true,
+    "removeComments": false,
+    "noEmit": false,
+    "allowJs": false,
+    "checkJs": false
+  },
+  "include": ["*.ts", "../shared/types.js"],
+  "exclude": ["node_modules", "*.js"]
+}
