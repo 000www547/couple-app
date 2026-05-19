@@ -173,10 +173,6 @@ Page({
     }).catch(err => {
       console.error('[profile] loadRelationships 异常:', err);
     });
-      }
-    }).catch(err => {
-      console.error('加载关系列表失败', err);
-    });
   },
 
   // 选择关系类型
