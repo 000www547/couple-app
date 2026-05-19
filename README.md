@@ -1,21 +1,61 @@
 # 泡芙空间 - 亲密关系日常分享小程序
 
+<!-- 徽章区 -->
+<div align="center">
+
+[![GitHub stars](https://img.shields.io/github/stars/000www547/couple-app?style=flat-square)](https://github.com/000www547/couple-app/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/000www547/couple-app?style=flat-square)](https://github.com/000www547/couple-app/issues)
+[![GitHub license](https://img.shields.io/github/license/000www547/couple-app?style=flat-square)](https://github.com/000www547/couple-app/blob/master/LICENSE)
+[![WeApp](https://img.shields.io/badge/WeChat-WeApp-07C160?style=flat-square&logo=wechat)](https://developers.weixin.qq.com/miniprogram/dev/framework/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-JSDoc%20Types-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+![Cloud](https://img.shields.io/badge/Cloud-微信云开发-4A90E2?style=flat-square&logo=tencent-qcloud)
+![Platform](https://img.shields.io/badge/Platform-微信小程序-07C160?style=flat-square&logo=wechat)
+
+</div>
+
+---
+
 一款专为亲密关系设计的日常分享小程序，采用现代深色主题设计。可以记录纪念日、发布甜蜜时刻、管理心愿清单，还能和伴侣互发心跳/戳一戳，通过互动提升亲密度等级。情侣可以共同领养和喂养虚拟宠物，互动越多亲密度越高！
+
+---
+
+## 截图预览
+
+> 待补充 Demo 截图，可使用 [Mini Program DevTools 截图](https://developers.weixin.qq.com/miniprogram/dev/devtools/screenshot.html)
+
+| 首页 | 甜蜜时刻 | 心愿清单 | 个人中心 |
+|:---:|:---:|:---:|:---:|
+| [截图] | [截图] | [截图] | [截图] |
+
+<!-- 如有截图，取消下方注释并替换为实际图片路径 -->
+<!--
+<div align="center">
+  <img src="screenshots/home.png" width="250" alt="首页" />
+  <img src="screenshots/moments.png" width="250" alt="甜蜜时刻" />
+  <img src="screenshots/profile.png" width="250" alt="个人中心" />
+</div>
+-->
+
+---
 
 ## 功能特性
 
-- **纪念日管理** - 记录在一起的天数、对方生日、自定义纪念日，自动计算倒数/已过天数
-- **甜蜜时刻** - 发布图文动态，记录甜蜜回忆，支持评论互动（评论 +1 亲密度）
-- **心愿清单** - 记录和完成共同的心愿，支持进度追踪
-- **戳一戳/心跳** - 长按发送心跳，和伴侣互动（+2 亲密度）
-- **亲密度系统** - 通过互动提升等级（Lv.1 ~ Lv.10），等级越高关系越亲密
-- **宠物合养** - 和伴侣共同领养小狗/小兔，喂养和抚摸增加亲密度，第一只宠物满级后解锁第二只
-- **个人中心** - 编辑资料、绑定另一半、查看亲密度等级
+| 功能 | 说明 | 亲密度奖励 |
+|:---|:---|:---:|
+| 🗓️ 纪念日管理 | 记录在一起天数、对方生日、自定义纪念日，自动计算倒数/已过天数 | — |
+| 💕 甜蜜时刻 | 发布图文动态，记录甜蜜回忆，支持评论互动 | 评论 +1 |
+| ✨ 心愿清单 | 记录和完成共同的心愿，支持进度追踪 | — |
+| 💓 戳一戳/心跳 | 长按发送心跳，和伴侣互动 | 发送 +2 |
+| 🔥 亲密度系统 | 通过互动提升等级（Lv.1 ~ Lv.10），等级越高关系越亲密 | — |
+| 🐾 宠物合养 | 和伴侣共同领养小狗/小兔，喂养和抚摸增加亲密度 | 喂养 +2 / 抚摸 +3 |
+| 👤 个人中心 | 编辑资料、绑定另一半、查看亲密度等级 | — |
+
+---
 
 ## 亲密度等级
 
 | 等级 | 所需亲密度 | 称号 |
-|------|-----------|------|
+|:---:|:---:|:---:|
 | Lv.1 | 0 | 初识 |
 | Lv.2 | 10 | 初识 |
 | Lv.3 | 20 | 熟悉 |
@@ -29,44 +69,61 @@
 
 > 💡 在「更多」页面点击亲密度卡片，查看详细的升级方法和等级说明。
 
+---
+
 ## 技术栈
 
-- 微信小程序
-- 微信云开发（云数据库 + 云函数）
-- Vant Weapp UI 组件库
-- TypeScript（云函数 JSDoc 类型注解 + 统一类型定义）
-- 设计风格：现代深色主题
-- 主题色：`#1A1A1A`（深色背景）、`#FF6B9D`（粉色高亮）、`#2D2D2D`（卡片色）
+| 类别 | 技术 |
+|:---|:---|
+| 平台 | 微信小程序 |
+| 后端 | 微信云开发（云数据库 + 云函数） |
+| UI | Vant Weapp 组件库 |
+| 类型系统 | TypeScript（JSDoc 类型注解 + 统一类型定义） |
+| 风格 | 现代深色主题 |
+
+### 主题色
+
+| 用途 | 色值 |
+|:---|:---|
+| 深色背景 | `#1A1A1A` |
+| 卡片色 | `#2D2D2D` |
+| 粉色高亮（accent） | `#FF6B9D` |
+| 文字主色 | `#FFFFFF` |
+
+---
 
 ## 项目结构
 
 ```
 couple-app/
-├── app.js                     # 小程序入口
-├── app.json                   # 全局配置
-├── app.wxss                   # 全局样式（深色主题变量）
-├── project.config.json        # 项目配置
-├── tsconfig.json              # TypeScript 配置（支持 JSDoc 类型检查）
-├── cloudfunctions/            # 云函数
-│   ├── shared/               # 共享类型定义
-│   │   ├── types.js          # 数据模型类型定义 + 工具函数（JSDoc 格式）
-│   │   └── wx-server-sdk.d.ts # wx-server-sdk 类型声明
-│   ├── login/                # 登录云函数（含亲密度字段）
-│   ├── moments/               # 甜蜜时刻云函数（发布/评论/点赞）
-│   ├── heartbeat/             # 心跳/戳一戳云函数
-│   ├── relationships/         # 关系绑定云函数
-│   ├── wishes/                # 心愿清单云函数
-│   └── pet/                   # 宠物合养云函数（领养/喂养/抚摸）
-├── pages/                     # 页面目录
-│   ├── index/                 # 首页（纪念日 + 亲密度展示）
-│   ├── moments/               # 甜蜜时刻（图文动态）
-│   ├── wishes/                # 心愿清单
-│   ├── profile/               # 个人中心
-│   ├── more/                  # 更多功能入口
-│   │   └── poke/              # 戳一戳子页面
-│   └── pet/                   # 宠物合养页面
-└── database/                  # 数据库说明
+├── app.js                        # 小程序入口
+├── app.json                      # 全局配置
+├── app.wxss                      # 全局样式（深色主题变量）
+├── project.config.json           # 项目配置
+├── tsconfig.json                 # TypeScript 配置（支持 JSDoc 类型检查）
+├── package.json                  # 项目依赖
+├── cloudfunctions/               # 云函数
+│   ├── shared/
+│   │   ├── types.js              # 数据模型类型定义 + 工具常量（JSDoc 格式）
+│   │   └── wx-server-sdk.d.ts   # wx-server-sdk 类型声明
+│   ├── login/                    # 登录云函数
+│   ├── moments/                  # 甜蜜时刻云函数（发布/评论/点赞）
+│   ├── heartbeat/                # 心跳/戳一戳云函数
+│   ├── relationships/           # 关系绑定云函数
+│   ├── wishes/                  # 心愿清单云函数
+│   └── pet/                     # 宠物合养云函数
+├── pages/                        # 页面目录
+│   ├── index/                   # 首页（纪念日 + 亲密度展示）
+│   ├── moments/                 # 甜蜜时刻（图文动态）
+│   ├── wishes/                  # 心愿清单
+│   ├── profile/                # 个人中心
+│   ├── more/                    # 更多功能入口
+│   │   └── poke/               # 戳一戳子页面
+│   └── pet/                    # 宠物合养页面
+└── database/                    # 数据库说明文档
 ```
+
+---
 
 ## 快速开始
 
@@ -78,7 +135,7 @@ couple-app/
 
 ### 2. 配置项目
 
-- 打开 `project.config.json`，将 `appid` 改为你的小程序AppID
+- 打开 `project.config.json`，将 `appid` 改为你的小程序 AppID
 - `app.js` 已使用 `wx.cloud.DYNAMIC_CURRENT_ENV`，无需修改云环境配置
 
 ### 3. 创建数据库集合
@@ -86,38 +143,39 @@ couple-app/
 在云开发控制台创建以下集合：
 
 | 集合名 | 说明 | 安全规则 |
-|--------|------|----------|
+|:---|:---|:---|
 | `users` | 用户表（含亲密度、关系数据） | 默认 |
-| `anniversaries` | 纪念日表 | read: true, write: auth.openid != null |
-| `moments` | 甜蜜时刻表 | read: true, write: auth.openid != null |
-| `comments` | 评论表 | read: true, write: auth.openid != null |
-| `heartbeats` | 心跳记录表 | read: true, write: auth.openid != null |
-| `wishes` | 心愿清单表 | read: true, write: auth.openid != null |
-| `pets` | 宠物合养表 | read: true, write: auth.openid != null |
+| `anniversaries` | 纪念日表 | `read: true, write: auth.openid != null` |
+| `moments` | 甜蜜时刻表 | `read: true, write: auth.openid != null` |
+| `comments` | 评论表 | `read: true, write: auth.openid != null` |
+| `heartbeats` | 心跳记录表 | `read: true, write: auth.openid != null` |
+| `wishes` | 心愿清单表 | `read: true, write: auth.openid != null` |
+| `pets` | 宠物合养表 | `read: true, write: auth.openid != null` |
 
 ### 4. 部署云函数
 
 在 `cloudfunctions` 目录上右键，选择「上传并部署：云端安装依赖」
-- **需要分别部署所有云函数**：`login`、`moments`、`heartbeat`、`relationships`、`wishes`、`pet`
+
+需要分别部署所有云函数：`login`、`moments`、`heartbeat`、`relationships`、`wishes`、`pet`、`getTempFileURL`
 
 ### 5. 安装 Vant Weapp
 
 在小程序根目录执行：
-```
+
+```bash
 npm install @vant/weapp --save
 ```
+
 然后在微信开发者工具中点击「工具」→「构建 npm」
 
-### 6. 安装 TypeScript 类型支持（可选）
+### 6. 类型检查（可选）
 
 ```bash
 npm install
 npm run typecheck   # 检查云函数类型
 ```
 
-### 7. 编译运行
-
-在微信开发者工具中点击「编译」即可预览
+---
 
 ## 使用说明
 
@@ -130,7 +188,7 @@ npm run typecheck   # 检查云函数类型
 ### 纪念日规则
 
 | 类型 | 日期限制 | 显示方式 |
-|------|---------|---------|
+|:---|:---|:---|
 | 在一起 | 不可超过今天 | 显示"第 X 天" |
 | 生日 | 可选择过去日期 | 显示"距下次还有 X 天"，当天特殊提示 |
 | 自定义 | 无限制 | 未来日期倒数，过去日期显示"第 X 天" |
@@ -168,13 +226,18 @@ npm run typecheck   # 检查云函数类型
 6. 亲密度等级：陌生 → 熟悉 → 亲近 → 亲密 → 灵魂伙伴
 7. 支持给宠物命名
 
+---
+
 ## 设计说明
 
 本项目采用**现代深色主题**设计：
+
 - 主色：`#1A1A1A`（深色背景）、`#FF6B9D`（粉色 accent）
 - 卡片：`#2D2D2D`（主卡片）、`#FFFFFF`（浅色卡片）
 - 圆角：24-32rpx 大圆角设计
 - 渐变：粉色渐变用于重点按钮和特殊卡片
+
+---
 
 ## 注意事项
 
@@ -183,13 +246,12 @@ npm run typecheck   # 检查云函数类型
 - 数据库集合安全规则请参考上述配置，否则情侣间无法互相访问数据
 - 请确保小程序内容合法合规
 
-## GitHub
-
-项目仓库：https://github.com/000www547/couple-app
+---
 
 ## 更新日志
 
 ### v1.4.0（最新）
+
 - 🔧 **TypeScript 类型系统重构**：为 6 个云函数全部添加 JSDoc 类型注解
   - `cloudfunctions/shared/types.js`：统一数据模型类型（IUser、IRelationship、IMoment、IPet 等）
   - `cloudfunctions/shared/wx-server-sdk.d.ts`：`wx-server-sdk` 类型声明
@@ -199,16 +261,19 @@ npm run typecheck   # 检查云函数类型
   - README 新增 TypeScript 技术栈说明和类型检查步骤
 
 ### v1.3.2
+
 - 🐛 修复甜蜜时刻伴侣动态图片无法显示（`cloud://` → HTTPS 批量转换）
-- 🐛 修复愿望清单"全部"tab暴露伴侣私人心愿的问题（改为只显示共同心愿）
+- 🐛 修复愿望清单"全部"tab 暴露伴侣私人心愿的问题（改为只显示共同心愿）
 - 🐛 修复戳一戳记录显示方向混淆问题（正确区分"我戳TA"和"TA戳我"，显示真实昵称）
 
 ### v1.3.1
+
 - 🐛 修复关系列表/心愿/宠物页面伴侣头像显示异常（cloud:// 未转 HTTPS）
 - 🐛 修复戳一戳发送方/接收方方向混淆问题
 - 🐛 修复关系绑定后宠物页面异常问题
 
 ### v1.3.0
+
 - ✨ 新增宠物合养功能的情侣共同养成系统，支持小狗和小兔两种宠物
 - 🐾 宠物状态系统：饱食度（每小时-10%）、亲密度（抚摸+3/喂养+2）
 - 🌟 宠物亲密度等级：陌生→熟悉→亲近→亲密→灵魂伙伴
@@ -217,6 +282,7 @@ npm run typecheck   # 检查云函数类型
 - 🎨 更多页面重构，功能入口更清晰
 
 ### v1.2.0
+
 - ⚡ 优化心跳云函数性能，减少数据库调用次数，降低超时风险
 - ✨ 前端添加冷启动超时重试机制（首次超时自动重试一次）
 - 🐛 修复绑定关系时对方用户的 activeRelationship 字段未设置的问题
@@ -224,6 +290,7 @@ npm run typecheck   # 检查云函数类型
 - 📝 新增云函数调试日志，方便排查超时问题
 
 ### v1.1.0
+
 - ✨ 新增亲密度系统（评论 +1，戳一戳 +2）
 - ✨ 新增亲密度等级展示和说明弹窗
 - 🎨 全面 redesign：浅粉色主题 → 现代深色主题
@@ -231,5 +298,14 @@ npm run typecheck   # 检查云函数类型
 - 🐛 修复自定义纪念日颜色不一致问题
 
 ### v1.0.0
+
 - 🎉 首次发布
 - 纪念日管理、甜蜜时刻、心愿清单、戳一戳功能
+
+---
+
+<p align="center">
+  <a href="https://github.com/000www547/couple-app">GitHub</a> ·
+  <a href="https://github.com/000www547/couple-app/stargazers">Star</a> ·
+  <a href="https://github.com/000www547/couple-app/issues">Issues</a>
+</p>
