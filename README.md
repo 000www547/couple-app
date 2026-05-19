@@ -34,6 +34,7 @@
 - 微信小程序
 - 微信云开发（云数据库 + 云函数）
 - Vant Weapp UI 组件库
+- TypeScript（云函数 JSDoc 类型注解 + 统一类型定义）
 - 设计风格：现代深色主题
 - 主题色：`#1A1A1A`（深色背景）、`#FF6B9D`（粉色高亮）、`#2D2D2D`（卡片色）
 
@@ -45,8 +46,12 @@ couple-app/
 ├── app.json                   # 全局配置
 ├── app.wxss                   # 全局样式（深色主题变量）
 ├── project.config.json        # 项目配置
+├── tsconfig.json              # TypeScript 配置（支持 JSDoc 类型检查）
 ├── cloudfunctions/            # 云函数
-│   ├── login/                 # 登录云函数（含亲密度字段）
+│   ├── shared/               # 共享类型定义
+│   │   ├── types.js          # 数据模型类型定义 + 工具函数（JSDoc 格式）
+│   │   └── wx-server-sdk.d.ts # wx-server-sdk 类型声明
+│   ├── login/                # 登录云函数（含亲密度字段）
 │   ├── moments/               # 甜蜜时刻云函数（发布/评论/点赞）
 │   ├── heartbeat/             # 心跳/戳一戳云函数
 │   ├── relationships/         # 关系绑定云函数
@@ -103,7 +108,14 @@ npm install @vant/weapp --save
 ```
 然后在微信开发者工具中点击「工具」→「构建 npm」
 
-### 6. 编译运行
+### 6. 安装 TypeScript 类型支持（可选）
+
+```bash
+npm install
+npm run typecheck   # 检查云函数类型
+```
+
+### 7. 编译运行
 
 在微信开发者工具中点击「编译」即可预览
 
@@ -177,7 +189,16 @@ npm install @vant/weapp --save
 
 ## 更新日志
 
-### v1.3.2（最新）
+### v1.4.0（最新）
+- 🔧 **TypeScript 类型系统重构**：为 6 个云函数全部添加 JSDoc 类型注解
+  - `cloudfunctions/shared/types.js`：统一数据模型类型（IUser、IRelationship、IMoment、IPet 等）
+  - `cloudfunctions/shared/wx-server-sdk.d.ts`：`wx-server-sdk` 类型声明
+  - `tsconfig.json`：TypeScript 配置，支持 VS Code IntelliSense 和 `npm run typecheck`
+  - `package.json`：新增 `typescript` devDependency 和 `typecheck` 脚本
+  - 工具函数全部类型化：`fetchUserInfos`、`convertMomentImages`、`getPartnerId`、`calculateHunger` 等
+  - README 新增 TypeScript 技术栈说明和类型检查步骤
+
+### v1.3.2
 - 🐛 修复甜蜜时刻伴侣动态图片无法显示（`cloud://` → HTTPS 批量转换）
 - 🐛 修复愿望清单"全部"tab暴露伴侣私人心愿的问题（改为只显示共同心愿）
 - 🐛 修复戳一戳记录显示方向混淆问题（正确区分"我戳TA"和"TA戳我"，显示真实昵称）
