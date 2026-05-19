@@ -52,6 +52,7 @@
       }
     ]
   },
+  "lazyCodeLoading": "requiredComponents",
   "usingComponents": {
     "van-button": "@vant/weapp/button/index",
     "van-card": "@vant/weapp/card/index",
