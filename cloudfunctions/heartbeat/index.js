@@ -161,7 +161,41 @@ exports.main = async (event, context) => {
 
         /** @type {Record<string,any>} */
         const userInfos = {};
-        userInfosRes.data.forEach(/** @param {any} u */ (u) => { userInfos[u._openid] = u; });
+
+        // 收集需要转换的 cloud:// 头像
+        /** @type {string[]} */
+        const cloudAvatars = [];
+        /** @type {Record<string,string>} */
+        const avatarMap = {}; // openid -> cloud:// URL
+
+        userInfosRes.data.forEach(/** @param {any} u */ (u) => {
+          userInfos[u._openid] = u;
+          if (u.avatar && u.avatar.startsWith('cloud://')) {
+            cloudAvatars.push(u.avatar);
+            avatarMap[u._openid] = u.avatar;
+          }
+        });
+
+        // 批量转换 cloud:// 头像为 HTTPS
+        if (cloudAvatars.length > 0) {
+          try {
+            const urlRes = await cloud.getTempFileURL({ fileList: cloudAvatars });
+            if (urlRes.fileList) {
+              urlRes.fileList.forEach((/** @param {any} item */ item, /** @type {number} */ index) => {
+                if (item.tempFileURL) {
+                  const openid = Object.keys(avatarMap).find(
+                    /** @param {string} oid */ (oid) => avatarMap[oid] === item.fileID
+                  );
+                  if (openid && userInfos[openid]) {
+                    userInfos[openid].avatar = item.tempFileURL;
+                  }
+                }
+              });
+            }
+          } catch (e) {
+            console.error('[heartbeat] 头像转换失败', e);
+          }
+        }
 
         // 附加方向标记
         /** @type {Array<any>} */

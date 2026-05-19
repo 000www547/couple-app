@@ -111,11 +111,24 @@ Page({
 
   getPartnerInfo: function(partnerId) {
     const db = wx.cloud.database();
+    const that = this;
     db.collection('users').where({
       _openid: partnerId
-    }).get().then(res => {
+    }).get().then(async res => {
       if (res.data.length > 0) {
-        this.setData({ partnerInfo: res.data[0] });
+        let partner = res.data[0];
+        // 转换 cloud:// 头像为 HTTPS
+        if (partner.avatar && partner.avatar.startsWith('cloud://')) {
+          try {
+            const urlRes = await wx.cloud.getTempFileURL({ fileList: [partner.avatar] });
+            if (urlRes.fileList && urlRes.fileList[0] && urlRes.fileList[0].tempFileURL) {
+              partner.avatar = urlRes.fileList[0].tempFileURL;
+            }
+          } catch (e) {
+            console.error('[profile] 头像转换失败', e);
+          }
+        }
+        that.setData({ partnerInfo: partner });
       }
     });
   },
