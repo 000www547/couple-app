@@ -1,0 +1,9 @@
+{
+  "name": "getTempFileURL",
+  "version": "1.0.0",
+  "description": "获取云存储文件临时下载链接（云函数管理员权限）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

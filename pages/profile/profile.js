@@ -126,13 +126,22 @@ Page({
         if (partner.avatar && partner.avatar.startsWith('cloud://')) {
           console.log('[profile] 开始转换头像:', partner.avatar);
           try {
-            const urlRes = await wx.cloud.getTempFileURL({ fileList: [partner.avatar] });
-            console.log('[profile] getTempFileURL 返回:', JSON.stringify(urlRes));
-            if (urlRes.fileList && urlRes.fileList[0] && urlRes.fileList[0].tempFileURL) {
-              partner.avatar = urlRes.fileList[0].tempFileURL;
-              console.log('[profile] 头像转换成功:', partner.avatar);
+            // 通过云函数获取临时链接（绕过客户端权限限制）
+            const urlRes = await wx.cloud.callFunction({
+              name: 'getTempFileURL',
+              data: { fileList: [partner.avatar] }
+            });
+            console.log('[profile] 云函数返回:', JSON.stringify(urlRes));
+            if (urlRes.result && urlRes.result.success && urlRes.result.data && urlRes.result.data.fileList) {
+              const fileItem = urlRes.result.data.fileList[0];
+              if (fileItem && fileItem.tempFileURL) {
+                partner.avatar = fileItem.tempFileURL;
+                console.log('[profile] 头像转换成功:', partner.avatar);
+              } else {
+                console.log('[profile] 头像转换失败: 无 tempFileURL, status:', fileItem && fileItem.status, 'errMsg:', fileItem && fileItem.errMsg);
+              }
             } else {
-              console.log('[profile] 头像转换失败: 无 tempFileURL');
+              console.log('[profile] 头像转换失败:', urlRes.result && urlRes.result.error);
             }
           } catch (e) {
             console.error('[profile] 头像转换异常:', e);
