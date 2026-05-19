@@ -154,15 +154,25 @@ Page({
 
   // 加载关系列表
   loadRelationships: function() {
+    console.log('[profile] loadRelationships: 开始加载');
     wx.cloud.callFunction({
       name: 'relationships',
       data: { action: 'getList' }
     }).then(res => {
+      console.log('[profile] loadRelationships 返回:', JSON.stringify(res.result));
       if (res.result && res.result.success) {
+        const list = res.result.relationships || [];
+        console.log('[profile] relationships 数量:', list.length, list.map(r => ({status: r.status, partnerId: r.partnerId})));
         this.setData({
-          relationships: res.result.relationships || [],
+          relationships: list,
           activeRelationship: res.result.activeRelationship
         });
+      } else {
+        console.log('[profile] loadRelationships 失败:', res.result && res.result.error);
+      }
+    }).catch(err => {
+      console.error('[profile] loadRelationships 异常:', err);
+    });
       }
     }).catch(err => {
       console.error('加载关系列表失败', err);
