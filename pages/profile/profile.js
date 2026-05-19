@@ -117,11 +117,6 @@ Page({
     }).get().then(async res => {
       if (res.data.length > 0) {
         let partner = res.data[0];
-        console.log('[profile] partner 原始数据:', JSON.stringify({
-          nickname: partner.nickname,
-          avatar: partner.avatar,
-          _openid: partner._openid
-        }));
         // 转换 cloud:// 头像为 HTTPS
         if (partner.avatar && partner.avatar.startsWith('cloud://')) {
           try {

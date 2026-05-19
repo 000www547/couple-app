@@ -35,7 +35,7 @@
     <view class="partner-card">
       <image class="avatar" src="{{partnerInfo.avatar || '/assets/icons/user.png'}}"/>
       <view class="partner-info">
-        <text class="partner-name">{{partnerInfo.nickname || 'TA'}}</text>
+        <text class="partner-name">{{partnerInfo.nickname && partnerInfo.nickname !== '1' ? partnerInfo.nickname : 'TA'}}</text>
         <text class="partner-status">已绑定</text>
       </view>
     </view>
