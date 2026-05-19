@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "关系管理云函数",
   "main": "index.js",
+  "engines": {
+    "node": ">=12"
+  },
   "dependencies": {
     "wx-server-sdk": "~2.6.3"
   }

@@ -62,7 +62,9 @@
           </view>
         </view>
         <view class="relationship-actions">
+          <van-button size="mini" type="danger" plain wx:if="{{item.status === 'active'}}" bindtap="requestUnbindFromList" data-partnerid="{{item.partnerId}}">解除关系</van-button>
           <van-button size="mini" type="danger" plain wx:if="{{item.status === 'pending_unbind' && item.unbindRequestBy !== userInfo._openid}}" bindtap="confirmUnbind" data-partnerid="{{item.partnerId}}">确认解除</van-button>
+          <van-tag type="warning" size="small" wx:if="{{item.status === 'pending_unbind' && item.unbindRequestBy === userInfo._openid}}">等待对方确认</van-tag>
         </view>
       </view>
     </view>

@@ -420,7 +420,45 @@ Page({
     this.setData({ showUnbindModal: false });
   },
 
-  // 发起解除关系
+  // 从关系列表发起解除关系
+  requestUnbindFromList: function(e) {
+    const partnerId = e.currentTarget.dataset.partnerid;
+    if (!partnerId) return;
+
+    wx.showModal({
+      title: '确认解除',
+      content: '确定要解除与该用户的关系吗？对方确认后将解除绑定。',
+      success: (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '处理中...' });
+          wx.cloud.callFunction({
+            name: 'relationships',
+            data: {
+              action: 'requestUnbind',
+              partnerId: partnerId
+            }
+          }).then(res => {
+            wx.hideLoading();
+            if (res.result && res.result.success) {
+              wx.showToast({ title: '已发起解除请求' });
+              this.loadRelationships();
+            } else {
+              wx.showToast({
+                title: res.result.error || '操作失败',
+                icon: 'none'
+              });
+            }
+          }).catch(err => {
+            wx.hideLoading();
+            console.error('[profile] requestUnbindFromList 异常:', err);
+            wx.showToast({ title: '操作失败', icon: 'none' });
+          });
+        }
+      }
+    });
+  },
+
+  // 发起解除关系（从“我的另一半”卡片）
   requestUnbind: function() {
     const partnerInfo = this.data.partnerInfo;
     if (!partnerInfo) {
