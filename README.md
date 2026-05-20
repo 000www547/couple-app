@@ -21,20 +21,16 @@
 
 ## 截图预览
 
-> 待补充 Demo 截图，可使用 [Mini Program DevTools 截图](https://developers.weixin.qq.com/miniprogram/dev/devtools/screenshot.html)
+<div align="center">
+  <img src="screenshots/index.jpg" width="220" alt="首页" />
+  <img src="screenshots/moments.jpg" width="220" alt="甜蜜时刻" />
+  <img src="screenshots/wishes.jpg" width="220" alt="心愿清单" />
+  <img src="screenshots/profile.jpg" width="220" alt="个人中心" />
+</div>
 
 | 首页 | 甜蜜时刻 | 心愿清单 | 个人中心 |
 |:---:|:---:|:---:|:---:|
-| [截图] | [截图] | [截图] | [截图] |
-
-<!-- 如有截图，取消下方注释并替换为实际图片路径 -->
-<!--
-<div align="center">
-  <img src="screenshots/home.png" width="250" alt="首页" />
-  <img src="screenshots/moments.png" width="250" alt="甜蜜时刻" />
-  <img src="screenshots/profile.png" width="250" alt="个人中心" />
-</div>
--->
+| 纪念日 · 亲密度 | 甜蜜时刻记录 | 心愿清单管理 | 个人资料 · 邀请码 |
 
 ---
 
