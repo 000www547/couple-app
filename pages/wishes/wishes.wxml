@@ -10,11 +10,11 @@
   </view>
 
   <!-- Tab切换 -->
-  <van-tabs active="{{activeTab}}" bind:change="onTabChange" color="#1A1A1A">
-    <van-tab title="全部" name="all"></van-tab>
-    <van-tab title="我的" name="my"></van-tab>
-    <van-tab title="共同" name="shared"></van-tab>
-  </van-tabs>
+  <view class="custom-tabs">
+    <view class="tab-item {{activeTab === 'all' ? 'active' : ''}}" bindtap="onTabChange" data-type="all">全部</view>
+    <view class="tab-item {{activeTab === 'my' ? 'active' : ''}}" bindtap="onTabChange" data-type="my">我的</view>
+    <view class="tab-item {{activeTab === 'shared' ? 'active' : ''}}" bindtap="onTabChange" data-type="shared">共同</view>
+  </view>
 
       <!-- 心愿列表 -->
   <scroll-view scroll-y class="wishes-list">
@@ -62,9 +62,11 @@
         <textarea class="textarea" placeholder="添加描述（选填）" value="{{newWish.description}}" bindinput="onDescInput"/>
       </view>
 
-      <view class="share-option">
+      <view class="share-option" bindtap="onShareChange">
         <text>设为共同心愿</text>
-        <van-switch checked="{{newWish.isShared}}" bind:change="onShareChange" active-color="#FF6B9D"/>
+        <view class="custom-switch {{newWish.isShared ? 'active' : ''}}">
+          <view class="custom-switch-dot"></view>
+        </view>
       </view>
 
       <van-button color="#1A1A1A" block round bindtap="addWish">保存</van-button>

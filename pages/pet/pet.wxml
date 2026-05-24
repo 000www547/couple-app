@@ -15,11 +15,11 @@
 
     <view class="pet-select">
       <view class="pet-option {{newPetType === 'dog' ? 'active' : ''}}" bindtap="selectPetType" data-type="dog">
-        <text class="pet-emoji">🐕</text>
+        <image src="/assets/pets/dog.png" class="pet-option-svg" mode="aspectFit"/>
         <text class="pet-name">小狗</text>
       </view>
       <view class="pet-option {{newPetType === 'rabbit' ? 'active' : ''}}" bindtap="selectPetType" data-type="rabbit">
-        <text class="pet-emoji">🐰</text>
+        <image src="/assets/pets/rabbit.png" class="pet-option-svg" mode="aspectFit"/>
         <text class="pet-name">小兔</text>
       </view>
     </view>
@@ -45,8 +45,43 @@
 
     <!-- 当前宠物卡片 -->
     <view class="pet-card" wx:if="{{currentPet}}">
-      <!-- 心情emoji -->
-      <view class="pet-mood">{{currentPet.mood}}</view>
+      <!-- 爱心泡泡容器（摸摸时弹出） -->
+      <view class="heart-bubbles" wx:if="{{showHearts}}">
+        <text class="heart-bubble h1">💕</text>
+        <text class="heart-bubble h2">💗</text>
+        <text class="heart-bubble h3">💖</text>
+      </view>
+
+      <!-- 食物飞入元素（投喂时显示） -->
+      <view class="food-fly" wx:if="{{showFoodFly}}">
+        <text class="food-emoji">🍖</text>
+      </view>
+
+      <!-- 闪光特效（好感度升级时显示） -->
+      <view class="sparkle-effect" wx:if="{{showSparkle}}">
+        <text class="sparkle s1">✨</text>
+        <text class="sparkle s2">⭐</text>
+        <text class="sparkle s3">✨</text>
+        <text class="sparkle s4">🌟</text>
+      </view>
+
+      <!-- 宠物图片 -->
+      <view class="pet-image-wrapper pet-mood-animate {{petBounce ? 'pet-bounce' : ''}} {{petShake ? 'pet-shake' : ''}}">
+        <!-- 小狗 -->
+        <image wx:if="{{currentPet.type === 'dog'}}" src="/assets/pets/dog.png" class="pet-image" mode="aspectFit"/>
+
+        <!-- 小兔 -->
+        <image wx:if="{{currentPet.type === 'rabbit'}}" src="/assets/pets/rabbit.png" class="pet-image" mode="aspectFit"/>
+
+        <!-- 饥饿文字覆盖层 -->
+        <view class="hunger-overlay" wx:if="{{currentPet.hunger < 30}}">
+          <text class="hunger-overlay-text">好饿...</text>
+        </view>
+        <!-- 需要关爱文字覆盖层 -->
+        <view class="sad-overlay" wx:if="{{currentPet.affection < 20}}">
+          <text class="sad-overlay-text">需要关爱...</text>
+        </view>
+      </view>
 
       <!-- 名字 -->
       <view class="pet-name-display" bindtap="showEditName">
@@ -80,13 +115,13 @@
         <text class="hunger-percent">{{currentPet.hunger}}%</text>
       </view>
 
-      <!-- 操作按钮 -->
+      <!-- 操作按钮（添加点击动画） -->
       <view class="action-btns">
-        <view class="action-btn feed-btn" bindtap="feedPet">
+        <view class="action-btn feed-btn {{feedAnim ? 'btn-pop' : ''}}" bindtap="feedPet">
           <text class="action-icon">🍖</text>
           <text class="action-label">投喂</text>
         </view>
-        <view class="action-btn pet-btn" bindtap="petAnimal">
+        <view class="action-btn pet-btn {{petAnim ? 'btn-pop' : ''}}" bindtap="petAnimal">
           <text class="action-icon">👋</text>
           <text class="action-label">摸摸</text>
         </view>
@@ -106,8 +141,8 @@
         <text class="intro-arrow">{{showIntro ? '▲' : '▼'}}</text>
       </view>
       <view class="intro-body" wx:if="{{showIntro}}">
-        <view class="intro-item">🍖 投喂 +2 好感度（每小时饱食度 -10%）</view>
-        <view class="intro-item">👋 摸摸 +3 好感度（每小时可触发一次）</view>
+        <view class="intro-item">🍖 投喂 +2 好感度，每4小时最多3次</view>
+        <view class="intro-item">👋 摸摸 +3 好感度，每小时最多2次</view>
         <view class="intro-item">🌟 第一只宠物好感度达 80% 时解锁第二只</view>
         <view class="intro-item">💕 好感度等级：陌生 → 熟悉 → 亲近 → 亲密 → 灵魂伙伴</view>
       </view>
@@ -121,11 +156,11 @@
 
       <view class="pet-select">
         <view class="pet-option {{newPetType === 'dog' ? 'active' : ''}}" bindtap="selectPetType" data-type="dog">
-          <text class="pet-emoji">🐕</text>
+          <image src="/assets/pets/dog.png" class="pet-option-svg" mode="aspectFit"/>
           <text class="pet-name">小狗</text>
         </view>
         <view class="pet-option {{newPetType === 'rabbit' ? 'active' : ''}}" bindtap="selectPetType" data-type="rabbit">
-          <text class="pet-emoji">🐰</text>
+          <image src="/assets/pets/rabbit.png" class="pet-option-svg" mode="aspectFit"/>
           <text class="pet-name">小兔</text>
         </view>
       </view>

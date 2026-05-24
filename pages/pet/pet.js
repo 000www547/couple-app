@@ -22,7 +22,17 @@ Page({
     
     // 操作状态
     isOperating: false,
-    showIntro: false  // 功能介绍是否展开
+    showIntro: false,  // 功能介绍是否展开
+
+    // 动画状态
+    showHearts: false,   // 摸摸爱心泡泡
+    showFoodFly: false,   // 投喂食物飞入
+    showSparkle: false,   // 好感度升级闪光
+    petBounce: false,     // 宠物跳跃
+    petShake: false,      // 宠物摇晃
+    feedAnim: false,       // 投喂按钮动画
+    petAnim: false,        // 摸摸按钮动画
+    prevAffection: 0       // 上一次好感度（用于检测升级）
   },
 
   onShow: function() {
@@ -55,9 +65,25 @@ Page({
           pet1: res.result.pet1,
           pet2: res.result.pet2,
           canUnlockPet2: res.result.canUnlockPet2,
-          currentPet: res.result.pet1,
-          currentSlot: 'pet1'
         });
+
+        // 保留当前选中的宠物槽位，不要自动跳回 pet1
+        const slot = this.data.currentSlot;
+        const targetPet = slot === 'pet2' && res.result.pet2 ? res.result.pet2 : res.result.pet1;
+        this.setData({
+          currentPet: targetPet,
+          currentSlot: targetPet === res.result.pet2 ? 'pet2' : 'pet1'
+        });
+
+        // 检测好感度是否升级（触发闪光特效），基于当前选中的宠物
+        if (targetPet && this.data.prevAffection > 0) {
+          const newAff = targetPet.affection || 0;
+          const oldAff = this.data.prevAffection;
+          if (Math.floor(newAff / 20) > Math.floor(oldAff / 20)) {
+            this.triggerSparkle();
+          }
+        }
+        this.setData({ prevAffection: targetPet ? (targetPet.affection || 0) : 0 });
       } else if (res.result.error) {
         wx.showToast({
           title: res.result.error,
@@ -134,6 +160,23 @@ Page({
     
     this.setData({ isOperating: true });
 
+    // 触发投喂动画
+    this.setData({
+      showFoodFly: true,
+      petBounce: true,
+      feedAnim: true
+    });
+    // 重置动画状态
+    setTimeout(() => {
+      this.setData({
+        showFoodFly: false,
+        feedAnim: false
+      });
+    }, 800);
+    setTimeout(() => {
+      this.setData({ petBounce: false });
+    }, 600);
+
     wx.cloud.callFunction({
       name: 'pet',
       data: {
@@ -162,6 +205,23 @@ Page({
     if (this.data.isOperating) return;
     
     this.setData({ isOperating: true });
+
+    // 触发摸摸动画
+    this.setData({
+      showHearts: true,
+      petShake: true,
+      petAnim: true
+    });
+    // 重置动画状态
+    setTimeout(() => {
+      this.setData({
+        showHearts: false,
+        petAnim: false
+      });
+    }, 1500);
+    setTimeout(() => {
+      this.setData({ petShake: false });
+    }, 500);
 
     wx.cloud.callFunction({
       name: 'pet',
@@ -302,5 +362,13 @@ Page({
   // 切换功能介绍展开/收起
   toggleIntro: function() {
     this.setData({ showIntro: !this.data.showIntro });
+  },
+
+  // 触发闪光特效（好感度升级时）
+  triggerSparkle: function() {
+    this.setData({ showSparkle: true });
+    setTimeout(() => {
+      this.setData({ showSparkle: false });
+    }, 1000);
   }
 });

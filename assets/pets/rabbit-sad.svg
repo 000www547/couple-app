@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 260">
+  <!-- 阴影 -->
+  <ellipse cx="140" cy="245" rx="70" ry="8" fill="#E8E2D9" opacity="0.6"/>
+
+  <!-- 左耳/蓬松块 -->
+  <path d="M50 85 C35 115,30 145,42 160 C55 175,80 165,90 145 C98 130,95 100,85 80 C75 62,60 68,50 85Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- 右耳/蓬松块 -->
+  <path d="M230 85 C245 115,250 145,238 160 C225 175,200 165,190 145 C182 130,185 100,195 80 C205 62,220 68,230 85Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- 身体主体 -->
+  <path d="M60 125 C55 95,80 75,100 70 C120 65,160 65,180 70 C200 75,225 95,220 125 C228 145,238 170,225 200 C210 230,180 240,140 240 C100 240,70 230,55 200 C42 170,52 145,60 125Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- 左眼 - 向下看 -->
+  <ellipse cx="110" cy="128" rx="8" ry="9" fill="#555"/>
+  <circle cx="108" cy="132" r="2.5" fill="#fff"/>
+
+  <!-- 右眼 - 向下看 -->
+  <ellipse cx="170" cy="128" rx="8" ry="9" fill="#555"/>
+  <circle cx="168" cy="132" r="2.5" fill="#fff"/>
+
+  <!-- 悲伤小嘴 -->
+  <path d="M130 155 Q140 149 150 155" fill="none" stroke="#7A6B5D" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- 腮红（淡淡） -->
+  <ellipse cx="78" cy="145" rx="13" ry="8" fill="#FFB6C1" opacity="0.5"/>
+  <ellipse cx="202" cy="145" rx="13" ry="8" fill="#FFB6C1" opacity="0.5"/>
+</svg>

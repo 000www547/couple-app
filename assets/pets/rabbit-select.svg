@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 190">
+  <!-- 左耳 -->
+  <path d="M35 62 C25 82,22 105,30 115 C38 125,55 118,62 105 C68 95,65 75,58 62 C52 50,42 54,35 62Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="3.5" stroke-linejoin="round"/>
+
+  <!-- 右耳 -->
+  <path d="M165 62 C175 82,178 105,170 115 C162 125,145 118,138 105 C132 95,135 75,142 62 C148 50,158 54,165 62Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="3.5" stroke-linejoin="round"/>
+
+  <!-- 身体主体 -->
+  <path d="M42 92 C38 72,55 58,70 55 C85 52,115 52,130 55 C145 58,162 72,158 92 C163 105,170 122,162 142 C152 162,130 168,100 168 C70 168,48 162,38 142 C30 122,37 105,42 92Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="3.5" stroke-linejoin="round"/>
+
+  <!-- 左眼 -->
+  <ellipse cx="78" cy="90" rx="7" ry="9" fill="#555"/>
+  <circle cx="80" cy="87" r="2.5" fill="#fff"/>
+
+  <!-- 右眼 -->
+  <ellipse cx="122" cy="90" rx="7" ry="9" fill="#555"/>
+  <circle cx="124" cy="87" r="2.5" fill="#fff"/>
+
+  <!-- ω 嘴巴 -->
+  <path d="M88 108 Q95 100 100 108 Q105 100 112 108"
+        fill="none" stroke="#7A6B5D" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- 腮红 -->
+  <ellipse cx="55" cy="105" rx="11" ry="7" fill="#FFB6C1" opacity="0.6"/>
+  <ellipse cx="145" cy="105" rx="11" ry="7" fill="#FFB6C1" opacity="0.6"/>
+</svg>

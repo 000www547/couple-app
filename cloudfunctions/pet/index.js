@@ -26,11 +26,23 @@ const PET_TYPES = /** @type {const} */ ({
 /** 抚摸冷却时间（小时） */
 const PET_COOLDOWN_HOURS = 1;
 
+/** 投喂限制：多少小时内 */
+const FEED_WINDOW_HOURS = 4;
+
+/** 投喂限制：窗口内最多几次 */
+const FEED_MAX_PER_WINDOW = 3;
+
+/** 摸摸限制：多少小时内 */
+const PET_WINDOW_HOURS = 1;
+
+/** 摸摸限制：窗口内最多几次 */
+const PET_MAX_PER_WINDOW = 2;
+
 /** 饱食度每小时下降值 */
 const HUNGER_DECAY_PER_HOUR = 10;
 
-/** 解锁第二只宠物所需好感度阈值 */
-const PET2_UNLOCK_THRESHOLD = 80;
+/** 解锁第二只宠物所需好感度阈值（设为79.9防止浮点精度问题） */
+const PET2_UNLOCK_THRESHOLD = 79.9;
 
 // ============================================================
 // 类型定义
@@ -181,6 +193,8 @@ async function initPet(openid, event) {
     lastFedAt: now,
     lastPetAt: null,
     createdAt: now,
+    feedHistory: [],
+    petHistory: [],
   };
 
   if (existingPet.data && existingPet.data.length > 0) {
@@ -206,7 +220,6 @@ async function initPet(openid, event) {
       userId: openid,
       partnerId,
       pet1: newPet,
-      pet2: null,
       createdAt: now,
       updatedAt: now,
     },
@@ -265,6 +278,20 @@ async function feedPet(openid, event) {
   const pet = petData[targetSlot];
   if (!pet) return { success: false, error: '该宠物槽位为空' };
 
+  // 检查4小时内投喂次数限制（最多3次）
+  const now = new Date();
+  const windowMs = FEED_WINDOW_HOURS * 60 * 60 * 1000;
+  const feedHistory = pet.feedHistory || [];
+  // 只保留4小时内的记录
+  const recentFeeds = feedHistory.filter(/** @param {any} t */ (t) => (now - new Date(t)) < windowMs);
+
+  if (recentFeeds.length >= FEED_MAX_PER_WINDOW) {
+    return { success: false, error: '等会再来吧' };
+  }
+
+  // 追加本次投喂时间
+  const newFeedHistory = [...recentFeeds, now];
+
   const currentHunger = calculateHunger(pet);
   const newHunger = Math.min(100, currentHunger + 20);
   const newAffection = Math.min(100, pet.affection + 2);
@@ -276,6 +303,7 @@ async function feedPet(openid, event) {
       [`${targetSlot}.affection`]: newAffection,
       [`${targetSlot}.totalAffection`]: newTotalAffection,
       [`${targetSlot}.lastFedAt`]: db.serverDate(),
+      [`${targetSlot}.feedHistory`]: newFeedHistory,
     },
   });
 
@@ -304,17 +332,18 @@ async function petAnimal(openid, event) {
   const pet = petData[targetSlot];
   if (!pet) return { success: false, error: '该宠物槽位为空' };
 
-  // 检查 CD（1小时）
-  if (pet.lastPetAt) {
-    const lastPet = new Date(pet.lastPetAt);
-    const now = new Date();
-    const hoursPassed = (now - lastPet) / (1000 * 60 * 60);
+  // 检查1小时内摸摸次数限制（最多2次）
+  const now = new Date();
+  const windowMs = PET_WINDOW_HOURS * 60 * 60 * 1000;
+  const petHistory = pet.petHistory || [];
+  const recentPets = petHistory.filter(/** @param {any} t */ (t) => (now - new Date(t)) < windowMs);
 
-    if (hoursPassed < PET_COOLDOWN_HOURS) {
-      const remainingMinutes = Math.ceil((PET_COOLDOWN_HOURS - hoursPassed) * 60);
-      return { success: false, error: `抚摸CD中，请${remainingMinutes}分钟后再试` };
-    }
+  if (recentPets.length >= PET_MAX_PER_WINDOW) {
+    return { success: false, error: '等会再来陪我玩吧' };
   }
+
+  // 追加本次摸摸时间
+  const newPetHistory = [...recentPets, now];
 
   const newAffection = Math.min(100, pet.affection + 3);
   const newTotalAffection = pet.totalAffection + 3;
@@ -324,6 +353,7 @@ async function petAnimal(openid, event) {
       [`${targetSlot}.affection`]: newAffection,
       [`${targetSlot}.totalAffection`]: newTotalAffection,
       [`${targetSlot}.lastPetAt`]: db.serverDate(),
+      [`${targetSlot}.petHistory`]: newPetHistory,
     },
   });
 
@@ -366,11 +396,25 @@ async function unlockPet2(openid, event) {
     lastFedAt: now,
     lastPetAt: null,
     createdAt: now,
+    feedHistory: [],
+    petHistory: [],
   };
 
-  await db.collection('pets').doc(petData._id).update({
-    data: { pet2: newPet2, updatedAt: now },
-  });
+  // 兼容旧数据：如果 pet2 为 null，update 会报错（Cannot create field 'affection' in element {pet2: null}）
+  // 需要用 set 替换整个文档
+  if (petData.pet2 === null) {
+    const fullDoc = await db.collection('pets').doc(petData._id).get();
+    const docData = fullDoc.data;
+    delete docData._id;
+    delete docData._openid;
+    docData.pet2 = newPet2;
+    docData.updatedAt = now;
+    await db.collection('pets').doc(petData._id).set({ data: docData });
+  } else {
+    await db.collection('pets').doc(petData._id).update({
+      data: { pet2: newPet2, updatedAt: now },
+    });
+  }
 
   return { success: true, message: '第二只宠物解锁成功', pet: newPet2 };
 }

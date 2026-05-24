@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 260">
+  <!-- 阴影 -->
+  <ellipse cx="140" cy="245" rx="70" ry="8" fill="#E8E2D9" opacity="0.6"/>
+
+  <!-- 左耳/蓬松块 -->
+  <path d="M50 85 C35 115,30 145,42 160 C55 175,80 165,90 145 C98 130,95 100,85 80 C75 62,60 68,50 85Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- 右耳/蓬松块 -->
+  <path d="M230 85 C245 115,250 145,238 160 C225 175,200 165,190 145 C182 130,185 100,195 80 C205 62,220 68,230 85Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- 身体主体 - 蓬松面包型 -->
+  <path d="M60 125 C55 95,80 75,100 70 C120 65,160 65,180 70 C200 75,225 95,220 125 C228 145,238 170,225 200 C210 230,180 240,140 240 C100 240,70 230,55 200 C42 170,52 145,60 125Z"
+        fill="#FFFFFF" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- 左眼 - 弯月开心 -->
+  <path d="M96 120 Q110 105 124 120" fill="none" stroke="#555" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- 右眼 - 弯月开心 -->
+  <path d="M156 120 Q170 105 184 120" fill="none" stroke="#555" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- ω 嘴巴 -->
+  <path d="M125 145 Q132 135 140 145 Q148 135 155 145"
+        fill="none" stroke="#7A6B5D" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- 腮红 -->
+  <ellipse cx="78" cy="142" rx="14" ry="9" fill="#FFB6C1" opacity="0.6"/>
+  <ellipse cx="202" cy="142" rx="14" ry="9" fill="#FFB6C1" opacity="0.6"/>
+
+  <!-- 开心地张嘴 -->
+  <path d="M130 155 Q140 170 150 155" fill="none" stroke="#7A6B5D" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

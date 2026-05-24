@@ -78,8 +78,9 @@
   background: #FFF5F5;
 }
 
-.pet-emoji {
-  font-size: 80rpx;
+.pet-option-svg {
+  width: 160rpx;
+  height: 144rpx;
   margin-bottom: 10rpx;
 }
 
@@ -138,12 +139,55 @@
   border-radius: 30rpx;
   padding: 50rpx 40rpx;
   box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.05);
+  position: relative;
 }
 
-.pet-mood {
-  text-align: center;
-  font-size: 180rpx;
+.pet-image-wrapper {
+  width: 100%;
+  height: 400rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 20rpx;
+  position: relative;
+}
+
+.pet-image {
+  width: 320rpx;
+  height: 320rpx;
+}
+
+.hunger-overlay {
+  position: absolute;
+  top: 20rpx;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.hunger-overlay-text {
+  font-size: 28rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+}
+
+.sad-overlay {
+  position: absolute;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.sad-overlay-text {
+  font-size: 24rpx;
+  color: #999;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
 }
 
 .pet-name-display {
@@ -345,4 +389,242 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 40rpx;
+}
+
+/* ==================== 宠物动画样式 ==================== */
+
+/* 宠物待机浮动动画 */
+.pet-mood-animate {
+  animation: petFloat 3s ease-in-out infinite;
+}
+
+/* 宠物跳跃动画（投喂时） */
+.pet-bounce {
+  animation: petBounce 0.6s ease !important;
+}
+
+/* 宠物摇晃动画（摸摸时） */
+.pet-shake {
+  animation: petShake 0.5s ease !important;
+}
+
+/* 爱心泡泡 */
+.heart-bubbles {
+  position: absolute;
+  top: 60rpx;
+  left: 0;
+  right: 0;
+  height: 200rpx;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.heart-bubble {
+  position: absolute;
+  font-size: 40rpx;
+  animation: heartFloat 1.5s ease-out forwards;
+  opacity: 0;
+}
+
+.heart-bubble.h1 {
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.heart-bubble.h2 {
+  left: 50%;
+  animation-delay: 0.2s;
+  font-size: 50rpx;
+}
+
+.heart-bubble.h3 {
+  left: 65%;
+  animation-delay: 0.4s;
+}
+
+/* 食物飞入动画 */
+.food-fly {
+  position: absolute;
+  top: 40rpx;
+  right: 60rpx;
+  z-index: 20;
+  animation: foodFlyIn 0.8s ease-out forwards;
+}
+
+.food-emoji {
+  font-size: 60rpx;
+}
+
+/* 闪光特效 */
+.sparkle-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 50rpx;
+  animation: sparkleAnim 1s ease-out forwards;
+  opacity: 0;
+}
+
+.sparkle.s1 {
+  top: 20rpx;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.sparkle.s2 {
+  top: 60rpx;
+  right: 20%;
+  animation-delay: 0.15s;
+  font-size: 60rpx;
+}
+
+.sparkle.s3 {
+  top: 100rpx;
+  left: 40%;
+  animation-delay: 0.3s;
+}
+
+.sparkle.s4 {
+  top: 40rpx;
+  left: 60%;
+  animation-delay: 0.1s;
+  font-size: 40rpx;
+}
+
+/* 按钮Pop动画 */
+.btn-pop {
+  animation: btnPop 0.3s ease !important;
+}
+
+/* 好感度进度条发光动画 */
+.affection-fill {
+  position: relative;
+}
+
+.affection-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20rpx;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 0 8rpx 8rpx 0;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* ==================== 关键帧动画 ==================== */
+
+/* 宠物待机浮动 */
+@keyframes petFloat {
+  0%, 100% {
+    transform: translateY(0rpx);
+  }
+  50% {
+    transform: translateY(-20rpx);
+  }
+}
+
+/* 宠物跳跃（投喂） */
+@keyframes petBounce {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-40rpx) scale(1.1); }
+  50% { transform: translateY(0) scale(0.95); }
+  70% { transform: translateY(-15rpx) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* 宠物摇晃（摸摸） */
+@keyframes petShake {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  15% { transform: rotate(-8deg) scale(1.05); }
+  30% { transform: rotate(8deg) scale(1.05); }
+  45% { transform: rotate(-5deg) scale(1.03); }
+  60% { transform: rotate(5deg) scale(1.03); }
+  75% { transform: rotate(-2deg) scale(1.01); }
+}
+
+/* 爱心上浮消失 */
+@keyframes heartFloat {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0.5);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-80rpx) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-160rpx) scale(0.8);
+  }
+}
+
+/* 食物飞入 */
+@keyframes foodFlyIn {
+  0% {
+    opacity: 1;
+    transform: translateX(100rpx) translateY(-50rpx) scale(0.3) rotate(30deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-20rpx) translateY(10rpx) scale(1.2) rotate(-10deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+/* 闪光特效 */
+@keyframes sparkleAnim {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5) rotate(360deg);
+  }
+}
+
+/* 按钮Pop */
+@keyframes btnPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.85); }
+  100% { transform: scale(1); }
+}
+
+/* 进度条微光 */
+@keyframes shimmer {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* 宠物卡片进入动画 */
+.pet-card {
+  animation: cardEnter 0.5s ease-out;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

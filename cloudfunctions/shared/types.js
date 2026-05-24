@@ -77,16 +77,40 @@ const PET_TYPE_NAMES = {
 const PET_COOLDOWN_HOURS = 1;
 
 /**
+ * 投喂限制：多少小时内
+ * @type {number}
+ */
+const FEED_WINDOW_HOURS = 4;
+
+/**
+ * 投喂限制：窗口内最多几次
+ * @type {number}
+ */
+const FEED_MAX_PER_WINDOW = 3;
+
+/**
+ * 摸摸限制：多少小时内
+ * @type {number}
+ */
+const PET_WINDOW_HOURS = 1;
+
+/**
+ * 摸摸限制：窗口内最多几次
+ * @type {number}
+ */
+const PET_MAX_PER_WINDOW = 2;
+
+/**
  * 饱食度每小时下降值
  * @type {number}
  */
 const HUNGER_DECAY_PER_HOUR = 10;
 
 /**
- * 解锁第二只宠物所需好感度阈值
+ * 解锁第二只宠物所需好感度阈值（设为79.9防止浮点精度问题）
  * @type {number}
  */
-const PET2_UNLOCK_THRESHOLD = 80;
+const PET2_UNLOCK_THRESHOLD = 79.9;
 
 module.exports = {
   INTIMACY_LEVELS,
@@ -95,6 +119,10 @@ module.exports = {
   UNBIND_WAIT_DAYS,
   PET_TYPE_NAMES,
   PET_COOLDOWN_HOURS,
+  FEED_WINDOW_HOURS,
+  FEED_MAX_PER_WINDOW,
+  PET_WINDOW_HOURS,
+  PET_MAX_PER_WINDOW,
   HUNGER_DECAY_PER_HOUR,
   PET2_UNLOCK_THRESHOLD,
 };

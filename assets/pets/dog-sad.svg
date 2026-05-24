@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 260">
+  <!-- 阴影 -->
+  <ellipse cx="140" cy="240" rx="75" ry="8" fill="#E8E2D9" opacity="0.6"/>
+
+  <!-- 左耳 -->
+  <path d="M50 90 C30 130,25 175,40 190 C55 200,80 185,85 160 C90 140,85 100,70 85 C60 78,55 82,50 90Z"
+        fill="#FFF0F5" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M55 100 C45 130,42 160,52 170 C60 178,72 170,76 155 C80 140,78 110,68 98 C62 92,58 95,55 100Z"
+        fill="#FFE4E8" stroke="none"/>
+
+  <!-- 右耳 -->
+  <path d="M230 90 C250 130,255 175,240 190 C225 200,200 185,195 160 C190 140,195 100,210 85 C220 78,225 82,230 90Z"
+        fill="#FFF0F5" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M225 100 C235 130,238 160,228 170 C220 178,208 170,204 155 C200 140,202 110,212 98 C218 92,222 95,225 100Z"
+        fill="#FFE4E8" stroke="none"/>
+
+  <!-- 身体 -->
+  <path d="M60 120 C60 70,100 50,140 50 C180 50,220 70,220 120 C225 140,240 160,225 195 C210 225,180 235,140 235 C100 235,70 225,55 195 C40 160,55 140,60 120Z"
+        fill="#FFF0F5" stroke="#7A6B5D" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- 嘴部白色区域 -->
+  <path d="M95 135 C95 115,120 108,140 108 C160 108,185 115,185 135 C190 155,175 170,160 175 C150 178,130 178,120 175 C105 170,90 155,95 135Z"
+        fill="#FFFFFF" stroke="none"/>
+
+  <!-- 左眼 - 向下看 -->
+  <ellipse cx="105" cy="128" rx="8" ry="9" fill="#555"/>
+  <circle cx="103" cy="132" r="2.5" fill="#fff"/>
+
+  <!-- 右眼 - 向下看 -->
+  <ellipse cx="175" cy="128" rx="8" ry="9" fill="#555"/>
+  <circle cx="173" cy="132" r="2.5" fill="#fff"/>
+
+  <!-- 悲伤的小嘴 -->
+  <path d="M130 158 Q140 152 150 158" fill="none" stroke="#7A6B5D" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- 腮红 -->
+  <ellipse cx="75" cy="148" rx="14" ry="9" fill="#FFB6C1" opacity="0.5"/>
+  <ellipse cx="205" cy="148" rx="14" ry="9" fill="#FFB6C1" opacity="0.5"/>
+
+  <!-- 白点 -->
+  <circle cx="85" cy="105" r="3" fill="#fff" opacity="0.8"/>
+  <circle cx="110" cy="85" r="2.5" fill="#fff" opacity="0.8"/>
+  <circle cx="170" cy="82" r="3" fill="#fff" opacity="0.8"/>
+  <circle cx="195" cy="105" r="2" fill="#fff" opacity="0.8"/>
+  <circle cx="200" cy="145" r="3" fill="#fff" opacity="0.8"/>
+  <circle cx="180" cy="195" r="2.5" fill="#fff" opacity="0.8"/>
+  <circle cx="140" cy="205" r="3" fill="#fff" opacity="0.8"/>
+  <circle cx="100" cy="195" r="2" fill="#fff" opacity="0.8"/>
+  <circle cx="75" cy="175" r="2.5" fill="#fff" opacity="0.8"/>
+</svg>

@@ -59,7 +59,7 @@ Page({
   },
 
   onTabChange: function(e) {
-    const type = e.detail.name;
+    const type = e.currentTarget.dataset.type;
     this.setData({ activeTab: type });
     this.loadWishes();
   },
@@ -87,9 +87,9 @@ Page({
     });
   },
 
-  onShareChange: function(e) {
+  onShareChange: function() {
     this.setData({
-      'newWish.isShared': e.detail.value === true
+      'newWish.isShared': !this.data.newWish.isShared
     });
   },
 

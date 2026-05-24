@@ -28,6 +28,64 @@
   font-weight: 700;
 }
 
+/* ==================== Tab切换区域 ==================== */
+.custom-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  padding: 16rpx 0;
+  margin-bottom: 16rpx;
+  gap: 8rpx;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: #999;
+  border-bottom: 4rpx solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-item.active {
+  color: #1A1A1A;
+  font-weight: 700;
+  border-bottom-color: #1A1A1A;
+}
+
+/* ==================== 自定义开关 ==================== */
+.custom-switch {
+  width: 96rpx;
+  height: 56rpx;
+  border-radius: 28rpx;
+  background-color: #dcdcdc;
+  position: relative;
+  transition: background-color 0.3s;
+  flex-shrink: 0;
+}
+
+.custom-switch.active {
+  background-color: #FF6B9D;
+}
+
+.custom-switch-dot {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background-color: #fff;
+  position: absolute;
+  top: 4rpx;
+  left: 4rpx;
+  transition: left 0.3s;
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.2);
+}
+
+.custom-switch.active .custom-switch-dot {
+  left: 44rpx;
+}
+
 /* ==================== 心愿列表 ==================== */
 .wishes-list {
   height: calc(100vh - 280rpx);
